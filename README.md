@@ -1,5 +1,7 @@
 # bus-schedule-remastered
 
+## [Coding Standard](./DOCUMENTATION/CODING_STANDARD.md)
+
 ## [Contributing](./CONTRIBUTING.md)
 
 ## [Definition of Done](./DOCUMENTATION/DEFINITION_OF_DONE.md)

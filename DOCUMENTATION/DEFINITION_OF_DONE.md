@@ -3,6 +3,8 @@ For an issue to be closed it shall pass all the following. Exceptions may be all
 
 - All code must be commented.
 
+- All code must follow [Coding Standard](./CODING_STANDARD.md) (Verifyable by using ESLint)
+
 - All code shall be refactored and bad practice shall be minimized.
 
 - All documentation must be up to date.
