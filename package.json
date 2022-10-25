@@ -1,0 +1,19 @@
+{
+  "name": "bus-schedule-remastered",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NTIG-Uppsala/bus-schedule-remastered.git"
+  },
+  "author": "Leo Kempe, Leon Lööv, Viggo Blomqvist, Vincent Karm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NTIG-Uppsala/bus-schedule-remastered/issues"
+  },
+  "homepage": "https://github.com/NTIG-Uppsala/bus-schedule-remastered#readme"
+}
