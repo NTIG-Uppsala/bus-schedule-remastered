@@ -1,5 +1,7 @@
 # bus-schedule-remastered
 
+## [API Information](./DOCUMENTATION/API_INFORMATION.md)
+
 ## [Coding Standard](./DOCUMENTATION/CODING_STANDARD.md)
 
 ## [Contributing](./CONTRIBUTING.md)
