@@ -4,4 +4,3 @@ We have chosen to use mostly vanilla JavaScript to avoid unnecessary dependencie
 - HTML5
 - CSS3
 - JavaScript
-  - Express
