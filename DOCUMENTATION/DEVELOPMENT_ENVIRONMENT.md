@@ -3,12 +3,8 @@ This is the software we use, but hopefully you will be able to use different or 
 
 ## Windows
 - Windows 10 Education 21H2 (19044.1949)
-- node.js v16.18.0 (LTS)
-- Visual Studio Code
-  - Not necessary, just our choice of code editor
+- Node.js v16.18.0 (LTS)
 
 ## Ubuntu
 - Ubuntu 22.04.1 LTS
-- node.js v16.18.0 (LTS)
-- VSCodium
-  - Not necessary, just our choice of code editor
+- Node.js v16.18.0 (LTS)
