@@ -1,6 +1,6 @@
 {
   "name": "bus-schedule-remastered",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/NTIG-Uppsala/bus-schedule-remastered/issues"
   },
-  "homepage": "https://github.com/NTIG-Uppsala/bus-schedule-remastered#readme"
+  "homepage": "https://github.com/NTIG-Uppsala/bus-schedule-remastered#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.26.0",
+    "eslint-config-google": "^0.14.0"
+  }
 }
