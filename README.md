@@ -1,6 +1,8 @@
 # Bus Schedule - Remastered
 This project intends to display information about departures from bus stops near our school.
 
+To set up the project, please follow the [Setup Guide](./DOCUMENTATION/SETUP.md)
+
 ### [API Information](./DOCUMENTATION/API_INFORMATION.md)
 
 ### [Coding Standard](./DOCUMENTATION/CODING_STANDARD.md)
