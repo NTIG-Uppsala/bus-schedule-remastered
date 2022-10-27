@@ -1,5 +1,5 @@
 # Development Environment
-This is the software we use, but hopefully you will be able to use different operating sustems or future, updated software versions instead.
+This is the software we use, but hopefully you will be able to use different operating systems or future, updated software versions instead.
 
 ## Windows
 - Windows 10 Education 21H2 (19044.1949)

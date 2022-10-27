@@ -1,6 +1,6 @@
 # Dependencies
 
-## Actual dependencies:
+## Build dependencies:
 - Express ^4.18.2
 
 ## Development dependencies:
