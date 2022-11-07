@@ -1,5 +1,5 @@
 import {By, Builder} from 'selenium-webdriver';
-import {equal} from 'assert';
+import assert from 'assert';
 import 'chromedriver';
 
 describe('Run selenium test', function(env) {
@@ -16,7 +16,7 @@ describe('Run selenium test', function(env) {
       await driver.get('https://www.selenium.dev/selenium/web/web-form.html');
 
       const title = await driver.getTitle();
-      equal('Web form', title);
+      assert.equal('Web form', title);
 
       await driver.manage().setTimeouts({implicit: 500});
 
@@ -28,7 +28,7 @@ describe('Run selenium test', function(env) {
 
       const message = await driver.findElement(By.id('message'));
       const value = await message.getText();
-      equal('Received!', value);
+      assert.equal('Received!', value);
     });
   });
 });
