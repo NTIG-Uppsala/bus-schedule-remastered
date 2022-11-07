@@ -1,6 +1,7 @@
 import {By, Builder} from 'selenium-webdriver';
 import {suite} from 'selenium-webdriver/testing/index.js';
 import {equal} from 'assert';
+import 'chromedriver';
 
 suite(function(env) {
   describe('First script', function() {
