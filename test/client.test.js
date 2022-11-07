@@ -2,7 +2,7 @@ import {By, Builder} from 'selenium-webdriver';
 import {equal} from 'assert';
 import 'chromedriver';
 
-(function(env) {
+describe('Run selenium test', function(env) {
   describe('First script', function() {
     let driver;
 
