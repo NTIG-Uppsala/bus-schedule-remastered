@@ -1,14 +1,12 @@
 import {By, Builder} from 'selenium-webdriver';
-import 'selenium-webdriver/chrome.js';
 import assert from 'assert';
-import 'chromedriver';
 
 describe('Run selenium test', function(env) {
   describe('First script', function() {
     let driver;
 
     before(async function() {
-      driver = await new Builder().forBrowser('chrome').build();
+      driver = await new Builder().forBrowser('firefox').build();
     });
 
     after(async () => await driver.quit());
