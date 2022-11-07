@@ -1,4 +1,5 @@
 import {By, Builder} from 'selenium-webdriver';
+import 'selenium-webdriver/chrome.js';
 import assert from 'assert';
 import 'chromedriver';
 
