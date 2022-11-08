@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Validate HTML & CSS
-        uses: Cyb3r-Jak3/html5validator-action
+        uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
           log_level: DEBUG
           css: true
