@@ -1,6 +1,6 @@
 {
   "name": "bus-schedule-remastered",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/NTIG-Uppsala/bus-schedule-remastered#readme",
   "dependencies": {
-    "chromedriver": "^107.0.3",
     "core-js": "^3.26.0",
     "express": "^4.18.2"
   },

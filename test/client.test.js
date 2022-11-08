@@ -1,7 +1,6 @@
 import {Builder} from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 import assert from 'assert';
-import 'chromedriver';
 
 describe('Example script', function() {
   let driver;
