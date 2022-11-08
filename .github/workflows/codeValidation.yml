@@ -23,4 +23,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       # Install dependencies with npm ci
       - run: npm ci
-      - run: for i in */*.js; do npx eslint $i; done
+      - run: for i in test/*.js; do npx eslint $i; done
+      - run: for i in *.js; do npx eslint $i; done
