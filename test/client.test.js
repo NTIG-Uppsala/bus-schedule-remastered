@@ -5,7 +5,7 @@ import assert from 'assert';
 describe('Example script', function() {
   let driver;
 
-  let chromeOptions = new chrome.Options;
+  const chromeOptions = new chrome.Options;
   chromeOptions.addArguments('--headless');
   chromeOptions.addArguments('--disable-dev-shm-usage');
 
