@@ -25,3 +25,23 @@ jobs:
       - run: npm ci
       - run: for i in test/*.js; do npx eslint $i; done
       # - run: for i in *.js; do npx eslint $i; done
+  
+  validateHtmlCss:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Validate HTML & CSS
+        uses: Cyb3r-Jak3/html5validator-action
+        with:
+          log_level: DEBUG
+          css: true
+          extra: --show-warnings
+      - name: Create log artifact
+        uses: actions/upload-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: log
+          path: log.log
