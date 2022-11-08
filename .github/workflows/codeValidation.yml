@@ -1,0 +1,48 @@
+name: Run code validation
+
+on:
+  # Triggers the workflow on push or pull request events for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validateJs:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.18.0, 16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      # Install dependencies with npm ci
+      - run: npm ci
+      - run: for i in test/*.js; do npx eslint $i; done
+      # - run: for i in *.js; do npx eslint $i; done
+  
+  validateHtmlCss:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Validate HTML & CSS
+        uses: Cyb3r-Jak3/html5validator-action@v7.2.0
+        with:
+          log_level: DEBUG
+          root: test/ # change to actual folder when it's created
+          css: true
+          extra: --show-warnings
+      - name: Create log artifact
+        uses: actions/upload-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: log
+          path: log.log
