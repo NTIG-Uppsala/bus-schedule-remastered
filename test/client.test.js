@@ -1,20 +1,19 @@
 import {Builder} from 'selenium-webdriver';
 import assert from 'assert';
+import 'chromedriver';
 
-describe('Run selenium test', function(env) {
-  describe('First script', function() {
-    let driver;
+describe('First script', function() {
+  let driver;
 
-    before(async function() {
-      driver = await new Builder().forBrowser('chrome').build();
-    });
+  before(async function() {
+    driver = await new Builder().forBrowser('chrome').build();
+  });
 
-    after(async () => await driver.quit());
+  after(async () => await driver.quit());
 
-    it('Search on Google', async function() {
-      await driver.get('https://google.com');
-      const title = await driver.getTitle();
-      assert.equal(title, 'Google');
-    });
+  it('Search on Google', async function() {
+    await driver.get('https://google.com');
+    const title = await driver.getTitle();
+    assert.equal(title, 'Google');
   });
 });
