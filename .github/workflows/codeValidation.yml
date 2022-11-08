@@ -37,6 +37,7 @@ jobs:
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
           log_level: DEBUG
+          root: test/ # change to actual folder when it's created
           css: true
           extra: --show-warnings
       - name: Create log artifact
