@@ -6,4 +6,5 @@ To set up the project for development:
 - \[Optional\] Install the ESLint extension if you're using VSCode
 - For testing you need a gtfs zip file at ./data/testdata.zip. If the tests stop working you can update it by running ./download_test_data.bat.
   - To run the file you need a .env file with the following content:
-    - `STATIC_API_KEY="Your API key"`
+    - `STATIC_API_KEY="{Your API key}"`
+      - For example `STATIC_API_KEY="1234567890"`
