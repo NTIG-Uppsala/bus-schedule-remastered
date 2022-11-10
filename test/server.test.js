@@ -1,5 +1,5 @@
-import * as gtfs from 'gtfs';
 import assert from 'assert';
+import * as gtfs from 'gtfs';
 
 // Config pointing to our gtfs database for testing
 const config = {
@@ -37,15 +37,13 @@ const config = {
 };
 
 describe('GTFS Test', () => {
-  describe('#importGtfs()', () => {
-    it('should should save the gtfs zip as a database', async () => {
-      await gtfs.importGtfs(config);
-    });
-    it('should read a value from the gtfs database', async () => {
-      await gtfs.openDb(config);
-      // This stop_id refers to lundellska skolan
-      const stop = await gtfs.getStops({stop_id: '9021003700218000'});
-      assert(stop.length);
-    });
+  it('should should save the gtfs zip as a database', async () => {
+    await gtfs.importGtfs(config);
+  });
+  it('should read a value from the gtfs database', async () => {
+    await gtfs.openDb(config);
+    // This stop_id refers to lundellska skolan
+    const stopTimes = await getSortedStopTimesByStopId('9021003700218000');
+    assert(stopTimes);
   });
 });
