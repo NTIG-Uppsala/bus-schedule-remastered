@@ -1,6 +1,5 @@
 @echo off
 :: Downloads data to be used for testing
-:: This script is intended to be run from the root of the repository
 :: You need a .env file in the root of the repository with the following variables:
 :: STATIC_API_KEY="{put your static api key kere}"
 :: Example: STATIC_API_KEY="1234567890"
