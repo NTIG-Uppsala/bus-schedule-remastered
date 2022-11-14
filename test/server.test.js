@@ -1,6 +1,5 @@
 import assert from 'assert';
 import * as gtfs from 'gtfs';
-import { isNull } from 'util';
 
 // Config pointing to our gtfs database for testing
 const config = {
@@ -50,6 +49,6 @@ describe('GTFS Test', () => {
   });
   it('should return null when input is invalid', async () => {
     const stopTimes = await getSortedStopTimesByStopId('');
-    assert(isNull(stopTimes));
+    assert(stopTimes === null);
   });
 });
