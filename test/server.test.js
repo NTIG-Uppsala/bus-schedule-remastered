@@ -1,5 +1,6 @@
 import assert from 'assert';
 import * as gtfs from 'gtfs';
+import { isNull } from 'util';
 
 // Config pointing to our gtfs database for testing
 const config = {
@@ -37,13 +38,18 @@ const config = {
 };
 
 describe('GTFS Test', () => {
-  it('should should save the gtfs zip as a database', async () => {
+  before(async () => {
     await gtfs.importGtfs(config);
-  });
-  it('should read a value from the gtfs database', async () => {
     await gtfs.openDb(config);
-    // This stop_id refers to lundellska skolan
-    const stopTimes = await getSortedStopTimesByStopId('9021003700218000');
+  });
+
+  it('should read a value from the gtfs database', async () => {
+    // This stop_id refers to Lundellska Skolan (A)
+    const stopTimes = await getSortedStopTimesByStopId('9022003700218001');
     assert(stopTimes);
+  });
+  it('should return null when input is invalid', async () => {
+    const stopTimes = await getSortedStopTimesByStopId('');
+    assert(isNull(stopTimes));
   });
 });
