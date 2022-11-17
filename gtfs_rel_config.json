@@ -1,0 +1,27 @@
+{
+  "agencies": [
+    {
+      "url": "https://opendata.samtrafiken.se/gtfs/ul/ul.zip",
+      "exclude": [
+        "agency",
+        "areas",
+        "attributions",
+        "calendar_dates",
+        "calendar",
+        "fare_attributes",
+        "fare_leg_rules",
+        "fare_products",
+        "fare_rules",
+        "fare_transfer_rules",
+        "feed_info",
+        "frequencies",
+        "levels",
+        "pathways",
+        "shapes",
+        "stop_areas",
+        "transfers"
+      ]
+    }
+  ],
+  "sqlitePath": "./data/gtfs.sqlite"
+}

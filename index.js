@@ -8,35 +8,123 @@ const PORT = 8000;
 
 import * as gtfs from 'gtfs';
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-// Reference date to use as a constant when creating timestamps
-const referenceDate = new Date();
+const release = process.env.NODE_ENV === 'production';
+
+// FIX: Handle possible missing files when using fs.readFileSync on config
+//        files
 
 // Config for buses and stops
-const config = JSON.parse(fs.readFileSync('./bus_config.json'));
+const config = JSON.parse(fs.readFileSync('./config.json'));
+
 // Config for GTFS import
-const gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_config.json'));
+let gtfsConfig;
+if (release) {
+  gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
+  // FIX: Handle missing API key
+  gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
+} else {
+  gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
+}
 
 const maxStopTimes = 100;
+const maxImportTries = 5;
 
-// Import GTFS data into database
-if (!fs.existsSync('./data/gtfs.sqlite')) {
-  await gtfs.importGtfs(gtfsConfig);
+let importSuccess = false;
+
+/**
+ * Converts time as string to Date in sv-SE locale
+ * @param {string} timeString time, as string in sv-SE format
+ * @return {Date} current date with time set to given time
+ */
+function timeStringToDate(timeString) {
+  const refDate = new Date();
+  const date = new Date(`${refDate.toLocaleDateString('sv-SE')}` +
+    `T${timeString}`);
+
+  if (isNaN(date)) {
+    return null;
+  }
+  return date;
 }
-await gtfs.openDb(gtfsConfig);
+
+/**
+ * Imports data to a SQLite database, located at the given path.
+ */
+async function importData() {
+  // TODO: Add gtfsConfig as input param
+  for (let i = 0; i < maxImportTries; i++) {
+    try {
+      // Import GTFS data into database
+      if (!fs.existsSync(gtfsConfig.sqlitePath)) {
+        await gtfs.importGtfs(gtfsConfig);
+      }
+      await gtfs.openDb(gtfsConfig);
+      importSuccess = true;
+      console.log(`Data imported successfully in ${i+1} tries`);
+    } catch (err) {
+      console.error(err);
+    }
+    if (importSuccess) {
+      break;
+    }
+  }
+
+  if (!importSuccess) {
+    const interval = setInterval(async () => {
+      await importData();
+      if (importSuccess) {
+        clearInterval(interval);
+      }
+      importSuccess = false;
+    }, 600000);
+  }
+  importSuccess = false;
+}
+
+/**
+ * Schedules the next import at the specified time of day
+ * @param {Number} timeString time of day to schedule at,
+ *                            as string in sv-SE format
+ */
+async function scheduleImport(timeString) {
+  // FIX: Check/handle if timeout is longer than maxTimeout
+  // const maxTimeout = Math.pow(2, 31) - 1;
+  const now = new Date();
+  const importTime = timeStringToDate(timeString);
+
+  let timeUntilImport; // in ms
+  const timeDiff = now.getTime() - importTime.getTime();
+  if (timeDiff <= 0) {
+    timeUntilImport = Math.abs(timeDiff);
+  } else {
+    importTime.setDate(importTime.getDate() + 1);
+    timeUntilImport = Math.abs(now.getTime() - importTime.getTime());
+  }
+  setTimeout(async () => {
+    await importData();
+    scheduleImport(timeString);
+  }, timeUntilImport);
+}
+
+if (release) {
+  await importData();
+  await scheduleImport(config.static_data_import_time);
+} else {
+  await importData();
+}
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Static data retrieval
 app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
   // Check if time param input is valid
-  const time = `${req.params.hh}:${req.params.mm}:${req.params.ss}`;
-  const date = new Date(`${referenceDate.getFullYear()}-` +
-    `${referenceDate.getMonth()}-` +
-    `${referenceDate.getDate()}` +
-    `T${time}`);
-  if (isNaN(date)) {
+  const timeString = `${req.params.hh}:${req.params.mm}:${req.params.ss}`;
+  if (!timeStringToDate(timeString)) {
     res.sendStatus(400);
     return;
   }
@@ -79,7 +167,7 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
     `departure_time FROM stop_times WHERE trip_id IN ` +
     `("${tripIds.join('", "')}") AND stop_id IN ` +
     `("${stopIdsList.join('", "')}") AND departure_time >= ` +
-    `"${date.toLocaleTimeString('se-SV')}" ` +
+    `"${timeString}" ` +
     `ORDER BY departure_time ASC LIMIT ${maxStopTimes}`);
 
   // Create and send JSON response
