@@ -176,7 +176,7 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
     if (stopTimes.hasOwnProperty(stopTime)) {
       for (const trip in trips) {
         if (trips.hasOwnProperty(trip)) {
-          if (trips[trip].trip_id = stopTimes[stopTime].trip_id) {
+          if (trips[trip].trip_id === stopTimes[stopTime].trip_id) {
             response.push({
               'stop_id': stopTimes[stopTime].stop_id,
               'route_id': trips[trip].route_id,
