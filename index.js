@@ -9,11 +9,11 @@ const PORT = 8000;
 import * as gtfs from 'gtfs';
 
 import * as dotenv from 'dotenv';
+import { constants } from 'buffer';
 dotenv.config();
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-const release = process.env.NODE_ENV === 'production';
 
 // FIX: Handle possible missing files when using fs.readFileSync on config
 //        files
@@ -22,9 +22,14 @@ const release = process.env.NODE_ENV === 'production';
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
 // Config for GTFS import
+
+const release = process.env.NODE_ENV.trim() === 'production';
+
+
 let gtfsConfig;
 if (release) {
   gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
+  console.log("RELEASE SUCCESS")
   // FIX: Handle missing API key
   gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
 } else {
@@ -65,7 +70,7 @@ async function importData() {
       }
       await gtfs.openDb(gtfsConfig);
       importSuccess = true;
-      console.log(`Data imported successfully in ${i+1} tries`);
+      console.log(`Data imported successfully in ${i + 1} tries`);
     } catch (err) {
       console.error(err);
     }
@@ -120,10 +125,13 @@ if (release) {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // Static data retrieval
 app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
   // Check if time param input is valid
   const timeString = `${req.params.hh}:${req.params.mm}:${req.params.ss}`;
+  console.log("Här testar vi nummer 4")
+
   if (!timeStringToDate(timeString)) {
     res.sendStatus(400);
     return;
@@ -137,6 +145,7 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
       for (const stopId in stopIds) {
         if (stopIds.hasOwnProperty(stopId)) {
           stopIdsList.push(stopIds[stopId]);
+          console.log("Här testar vi nummer 5")
         }
       }
     }
@@ -147,17 +156,21 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
   for (const bus in config.buses) {
     if (config.buses.hasOwnProperty(bus)) {
       routeIdsList.push(config.buses[bus].route_id);
+      console.log("Här testar vi nummer 6")
     }
   }
 
   // Get trip_ids using route_ids
-  const tripIds = [];
-  const trips = await gtfs.getTrips({'route_id': routeIdsList},
-      ['route_id', 'trip_id']);
-  for (const trip in trips) {
-    if (trips.hasOwnProperty(trip)) {
-      tripIds.push(trips[trip].trip_id);
-    }
+  const tripIds = []; // Declare the tripIds array
+  console.log()
+  const trips = await gtfs.getTrips({ route_id: "9022003700021001" });
+  console.log(1)
+  console.log("trips är:", trips)
+  for (let trip; in trips) {
+    console.log
+    tripIds.push(trips[trip].trip_id);
+    console.log('routeIdsList:', routeIdsList);
+    console.log('trips:', trips);
   }
 
   // Get stop times for trips in tripsIds at the stop_ids specified in
@@ -171,12 +184,18 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
     `ORDER BY departure_time ASC LIMIT ${maxStopTimes}`);
 
   // Create and send JSON response
+
   const response = [];
   for (const stopTime in stopTimes) {
     if (stopTimes.hasOwnProperty(stopTime)) {
       for (const trip in trips) {
         if (trips.hasOwnProperty(trip)) {
+          console.log("här testar vu nummer 8")
+
+          console.log('stopTimes[stopTime].trip_id:', stopTimes[stopTime].trip_id);
+          console.log('trips[trip].trip_id:', trips[trip].trip_id);
           if (trips[trip].trip_id === stopTimes[stopTime].trip_id) {
+            console.log("här testar vi nummer 9")
             response.push({
               'stop_id': stopTimes[stopTime].stop_id,
               'route_id': trips[trip].route_id,
@@ -188,8 +207,11 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
       }
     }
   }
-  res.json(response);
+  console.log('Response:', response);
+  res.json(response)
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
