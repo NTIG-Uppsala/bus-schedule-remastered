@@ -23,7 +23,7 @@ const config = JSON.parse(fs.readFileSync('./config.json'));
 
 // Config for GTFS import
 
-const release = process.env.NODE_ENV.trim() === 'production';
+const release = process.env.NODE_ENV === 'production';
 
 
 let gtfsConfig;
@@ -131,7 +131,6 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
   // Check if time param input is valid
   const timeString = `${req.params.hh}:${req.params.mm}:${req.params.ss}`;
   console.log("Här testar vi nummer 4")
-
   if (!timeStringToDate(timeString)) {
     res.sendStatus(400);
     return;
@@ -162,16 +161,21 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
 
   // Get trip_ids using route_ids
   const tripIds = []; // Declare the tripIds array
-  console.log()
-  const trips = await gtfs.getTrips({ route_id: "9022003700021001" });
+  console.log("test")
+  const trips = await gtfs.getTrips(
+    { route_id: "9011003001100000" }, ["33010000169511990"
+  ]
+  );
   console.log(1)
   console.log("trips är:", trips)
-  for (let trip; in trips) {
-    console.log
-    tripIds.push(trips[trip].trip_id);
+  for (const trip of trips) {
+    tripIds.push(trip.trip_id);
     console.log('routeIdsList:', routeIdsList);
     console.log('trips:', trips);
   }
+
+
+
 
   // Get stop times for trips in tripsIds at the stop_ids specified in
   // stopIdsList, where the departure_time is later or equal to the time

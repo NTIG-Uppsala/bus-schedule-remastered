@@ -45,5 +45,9 @@
       "route_id": "9011003001100000",
       "stop": "regementsvagen"
     }
+  },
+  "sqlitePath": "./data/gtfs.sqlite",
+  "trip_id": {
+    "11": "33010000169511990"
   }
 }
