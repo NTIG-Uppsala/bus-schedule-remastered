@@ -7,7 +7,7 @@ const app = express();
 const PORT = 8000;
 
 import * as gtfs from 'gtfs';
-
+import { openDb } from 'gtfs';
 import * as dotenv from 'dotenv';
 import { constants } from 'buffer';
 dotenv.config();
@@ -158,20 +158,16 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
       console.log("Här testar vi nummer 6")
     }
   }
-
+  const db = openDb(config);
   // Get trip_ids using route_ids
   const tripIds = []; // Declare the tripIds array
   console.log("test")
-  const trips = await gtfs.getTrips(
-    { route_id: "9011003001100000" }, ["33010000169511990"
-  ]
-  );
+  const trips = await gtfs.getTrips();
   console.log(1)
   console.log("trips är:", trips)
   for (const trip of trips) {
     tripIds.push(trip.trip_id);
-    console.log('routeIdsList:', routeIdsList);
-    console.log('trips:', trips);
+
   }
 
 
@@ -180,7 +176,7 @@ app.get('/static_data/:hh-:mm-:ss', async (req, res) => {
   // Get stop times for trips in tripsIds at the stop_ids specified in
   // stopIdsList, where the departure_time is later or equal to the time
   // specified in date (the time given by the client)
-  const stopTimes = await gtfs.runRawQuery(`SELECT stop_id, trip_id, ` +
+  const stopTimes = db.prepare(`SELECT stop_id, trip_id, ` +
     `departure_time FROM stop_times WHERE trip_id IN ` +
     `("${tripIds.join('", "')}") AND stop_id IN ` +
     `("${stopIdsList.join('", "')}") AND departure_time >= ` +

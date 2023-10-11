@@ -19,7 +19,6 @@
         "pathways",
         "shapes",
         "stop_areas",
-        "stop_times",
         "transfers"
       ]
     }
