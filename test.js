@@ -60,23 +60,29 @@ async function importData() {
 importData();
 
 app.get('/test/', async (req, res) => {
-    const get_tripId = gtfs.getTrips({ route_id: "9011003001100000", service_id: 11, direction_id: 0 })
+    function getStopTimes(stopId, routeId, serviceId) {
+        const tripIds = gtfs.getTrips({ route_id: routeId, service_id: serviceId, direction_id: 0 })
 
-    get_tripId.forEach((tripId) => {
-        let stopNum = "9022003700021001";
-        const get_stopTimes = gtfs.getStoptimes({ trip_id: tripId["trip_id"], stop_id: stopNum });
+        const allStopTimes = [];
 
+        tripIds.forEach((tripId) => {
+            const stopTimes = gtfs.getStoptimes({ trip_id: tripId["trip_id"], stop_id: stopId });
 
-        const matchingStopTimes = get_stopTimes
-            .filter(item => item.stop_id === stopNum)
-            .map(item => item.arrival_time);
+            const matchingStopTimes = stopTimes
+                .filter(item => item.stop_id === stopId)
+                .map(item => item.arrival_time);
 
-        matchingStopTimes.forEach(time => {
-            console.log(`Arrival Time: ${time}`)
-            console.log(matchingStopTimes)
+            allStopTimes.push(...matchingStopTimes);
+
         });
-    });
+        allStopTimes.sort((a, b) => a.localeCompare(b));
+
+        console.log(allStopTimes);
+    };
+    getStopTimes("9022003700021001", "9011003001100000", "11");
 });
+
+
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
 });
