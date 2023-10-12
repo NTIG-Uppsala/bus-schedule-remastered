@@ -60,25 +60,23 @@ async function importData() {
 importData();
 
 app.get('/test/', async (req, res) => {
-    const test = gtfs.getTrips({ route_id: "9011003001100000", service_id: 11, direction_id: 0 })
-    // console.log(test[0].trip_id)
+    const get_tripId = gtfs.getTrips({ route_id: "9011003001100000", service_id: 11, direction_id: 0 })
 
-    const stoptimes = gtfs.getStoptimes({
-        trip_id: "33010000187647595",
-    });
-    for (let stoptime in stoptimes) {
+    get_tripId.forEach((tripId) => {
         let stopNum = "9022003700021001";
-        // console.log(stoptimes)
-        if (stoptime["stop_id"] == stopNum) {
-            // console.log(stops[0].arrival_time)
-            console.log(stoptime["arrival_time"])
-        } else { console.log("else") };
-    };
-    const stops = gtfs.getStops({
-        stop_id: '9022003700021001',
+        const get_stopTimes = gtfs.getStoptimes({ trip_id: tripId["trip_id"], stop_id: stopNum });
+
+
+        const matchingStopTimes = get_stopTimes
+            .filter(item => item.stop_id === stopNum)
+            .map(item => item.arrival_time);
+
+        matchingStopTimes.forEach(time => {
+            console.log(`Arrival Time: ${time}`)
+            console.log(matchingStopTimes)
+        });
     });
 });
-
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
 });
