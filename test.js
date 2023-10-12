@@ -77,7 +77,7 @@ app.get('/test/', async (req, res) => {
         });
         allStopTimes.sort((a, b) => a.localeCompare(b));
 
-        console.log(allStopTimes);
+        res.json(allStopTimes);
     };
     getStopTimes("9022003700021001", "9011003001100000", "11");
 });
