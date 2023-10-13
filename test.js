@@ -1,14 +1,13 @@
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
-
 import express from 'express';
 const app = express();
 const PORT = 8080;
-
 import * as gtfs from 'gtfs';
-
 import * as dotenv from 'dotenv';
+import moment from 'moment';
+
 dotenv.config();
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
@@ -17,7 +16,6 @@ const release = process.env.NODE_ENV === 'production';
 
 // FIX: Handle possible missing files when using fs.readFileSync on config
 // files
-
 // Config for buses and stops
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
@@ -55,41 +53,12 @@ async function importData() {
         }
     }
 }
-
 // Call importData to open the database connection
 importData();
 
 app.get('/test/', async (req, res) => {
-    const test = gtfs.getTrips({ route_id: "9011003001100000", service_id: 11, direction_id: 0 })
-    // console.log(test[0].trip_id)
-
-    const stoptimes = gtfs.getStoptimes({
-        trip_id: "33010000187647595",
-    });
-    for (let stoptime in stoptimes) {
-        let stopNum = "9022003700021001";
-        // console.log(stoptimes)
-        if (stoptime["stop_id"] == stopNum) {
-            // console.log(stops[0].arrival_time)
-            console.log(stoptime["arrival_time"])
-        } else { console.log("else") };
-    };
-    const stops = gtfs.getStops({
-        stop_id: '9022003700021001',
-    });
-    
-    try {
-    const routes = await gtfs.getRoutes();
-    const trips = await gtfs.getTrips(
-    { route_id: "9011003013500000", direction_id: 0 });
-    res.json(trips);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
     function getStopTimes(stopId, routeId, serviceId) {
-        const tripIds = gtfs.getTrips({ route_id: routeId, service_id: serviceId, direction_id: 0 })
-
+        const tripIds = gtfs.getTrips({ route_id: routeId, service_id: serviceId, direction_id: 0 });
         const allStopTimes = [];
 
         tripIds.forEach((tripId) => {
@@ -97,15 +66,27 @@ app.get('/test/', async (req, res) => {
 
             const matchingStopTimes = stopTimes
                 .filter(item => item.stop_id === stopId)
-                .map(item => item.arrival_time);
+                .map(item => ({ tripId: tripId["trip_id"], arrivalTime: item.arrival_time }));
 
             allStopTimes.push(...matchingStopTimes);
-
         });
-        allStopTimes.sort((a, b) => a.localeCompare(b));
 
-        res.json(allStopTimes);
-    };
+        allStopTimes.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
+
+        // Get the current time
+        const currentTime = moment();
+
+        // Find the first arrival time that is in the future
+        const nextArrival = allStopTimes.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
+
+        if (nextArrival) {
+            res.json({ nextArrivalTime: nextArrival.arrivalTime, nextTripId: nextArrival.tripId });
+        } else {
+            res.json({ nextArrivalTime: "No more buses today", nextTripId: null });
+        }
+    }
+
+
     getStopTimes("9022003700021001", "9011003001100000", "11");
 });
 
