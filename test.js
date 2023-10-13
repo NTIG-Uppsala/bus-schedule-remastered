@@ -1,13 +1,14 @@
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
+
 import express from 'express';
 const app = express();
 const PORT = 8080;
-import * as gtfs from 'gtfs';
-import * as dotenv from 'dotenv';
-import moment from 'moment';
 
+import * as gtfs from 'gtfs';
+
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
@@ -16,6 +17,7 @@ const release = process.env.NODE_ENV === 'production';
 
 // FIX: Handle possible missing files when using fs.readFileSync on config
 // files
+
 // Config for buses and stops
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
@@ -53,6 +55,7 @@ async function importData() {
         }
     }
 }
+
 // Call importData to open the database connection
 importData();
 
@@ -85,7 +88,8 @@ app.get('/test/', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
     function getStopTimes(stopId, routeId, serviceId) {
-        const tripIds = gtfs.getTrips({ route_id: routeId, service_id: serviceId, direction_id: 0 });
+        const tripIds = gtfs.getTrips({ route_id: routeId, service_id: serviceId, direction_id: 0 })
+
         const allStopTimes = [];
 
         tripIds.forEach((tripId) => {
@@ -93,27 +97,15 @@ app.get('/test/', async (req, res) => {
 
             const matchingStopTimes = stopTimes
                 .filter(item => item.stop_id === stopId)
-                .map(item => ({ tripId: tripId["trip_id"], arrivalTime: item.arrival_time }));
+                .map(item => item.arrival_time);
 
             allStopTimes.push(...matchingStopTimes);
+
         });
+        allStopTimes.sort((a, b) => a.localeCompare(b));
 
-        allStopTimes.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
-
-        // Get the current time
-        const currentTime = moment();
-
-        // Find the first arrival time that is in the future
-        const nextArrival = allStopTimes.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
-
-        if (nextArrival) {
-            res.json({ nextArrivalTime: nextArrival.arrivalTime, nextTripId: nextArrival.tripId });
-        } else {
-            res.json({ nextArrivalTime: "No more buses today", nextTripId: null });
-        }
-    }
-
-
+        res.json(allStopTimes);
+    };
     getStopTimes("9022003700021001", "9011003001100000", "11");
 });
 
