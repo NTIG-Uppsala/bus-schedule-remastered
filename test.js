@@ -57,7 +57,6 @@ async function importData() {
 importData();
 
 app.get('/test/', async (req, res) => {
-<<<<<<< HEAD
     const test = gtfs.getTrips({ route_id: "9011003001100000", service_id: 11, direction_id: 0 })
     // console.log(test[0].trip_id)
 
@@ -85,7 +84,6 @@ app.get('/test/', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
-=======
     function getStopTimes(stopId, routeId, serviceId) {
         const tripIds = gtfs.getTrips({ route_id: routeId, service_id: serviceId, direction_id: 0 });
         const allStopTimes = [];
@@ -117,7 +115,6 @@ app.get('/test/', async (req, res) => {
 
 
     getStopTimes("9022003700021001", "9011003001100000", "11");
->>>>>>> e2b10424d14d7166e052acc9fe1668f302ecfd4e
 });
 
 
