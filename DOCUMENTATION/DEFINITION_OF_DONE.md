@@ -1,14 +1,12 @@
-# Definition of Done
-For an issue to be closed it shall pass all the following. Exceptions may be allowed if the Product Owner agrees to it.
-
-- All code must be commented.
-
-- All code must follow [Coding Standard](./CODING_STANDARD.md) (Verifiable by using ESLint)
-
-- All code shall be refactored and bad practice shall be minimized.
-
-- All documentation must be up to date.
-
-- Tests must be up to date and pass.
-
-- All present group members must approve the pull request before it is merged; There are branch protections in place to prevent 1 person from merging alone.
+# General
+* Everyone in the group who is present (at least two people) should approve and consider it complete.
+It aligns with the goal of the product we are creating.
+* Everyone who is present should be aware of what has been done, and those who are absent should be informed at a later time.
+* No placeholders; everything should be in a presentable state.
+* Documented in case new modules/advanced code have been added.
+* The card has been moved to "done."
+# For code:
+* The code has been reviewed by at least one other person. 
+* Uploaded correctly to GitHub.
+* Tests have passed.
+* No errors during validation
