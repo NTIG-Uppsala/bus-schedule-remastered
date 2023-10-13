@@ -55,7 +55,6 @@ async function importData() {
 importData();
 
 app.get('/test/', async (req, res) => {
-<<<<<<< Updated upstream
     const test = gtfs.getTrips({ route_id: "9011003001100000", service_id: 11, direction_id: 0 })
     // console.log(test[0].trip_id)
 
@@ -73,8 +72,8 @@ app.get('/test/', async (req, res) => {
     const stops = gtfs.getStops({
         stop_id: '9022003700021001',
     });
-=======
-  try {
+    
+    try {
     const routes = await gtfs.getRoutes();
     const trips = await gtfs.getTrips(
     { route_id: "9011003013500000", direction_id: 0 });
@@ -83,7 +82,6 @@ app.get('/test/', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
->>>>>>> Stashed changes
 });
 
 app.listen(PORT, () => {
