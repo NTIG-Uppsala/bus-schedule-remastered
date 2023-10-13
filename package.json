@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/NTIG-Uppsala/bus-schedule-remastered.git"
   },
-  "author": "Leo Kempe, Leon Lööv, Viggo Blomqvist, Vincent Karm, Roder Gumuscu",
+  "author": "Emil Mikkelsen Båge Robin Öfverberg Mohammad Hamdan Ambjörn Hogmark",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/NTIG-Uppsala/bus-schedule-remastered/issues"
