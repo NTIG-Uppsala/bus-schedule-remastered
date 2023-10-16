@@ -57,7 +57,18 @@ async function importData() {
 importData();
 
 app.get('/test/', async (req, res) => {
-    function getStopTimes(stopId, routeId, serviceId) {
+    try {
+        const result1 = await getStopTimes("9022003700021001", "9011003001100000", "11");
+        const result2 = await getStopTimes("9022003700021001", "9011003000300000", "3");
+
+        res.json({ results: [result1, result2] });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+async function getStopTimes(stopId, routeId, serviceId) {
+    return new Promise((resolve, reject) => {
         const tripIds = gtfs.getTrips({ route_id: routeId, service_id: serviceId, direction_id: 0 });
         const allStopTimes = [];
 
@@ -73,22 +84,17 @@ app.get('/test/', async (req, res) => {
 
         allStopTimes.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
 
-        // Get the current time
         const currentTime = moment();
-
-        // Find the first arrival time that is in the future
         const nextArrival = allStopTimes.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
 
         if (nextArrival) {
-            res.json({ nextArrivalTime: nextArrival.arrivalTime, nextTripId: nextArrival.tripId });
+            resolve({ service_id: serviceId, nextArrivalTime: nextArrival.arrivalTime, routeId: routeId });
         } else {
-            res.json({ nextArrivalTime: "No more buses today", nextTripId: null });
+            resolve({ nextArrivalTime: "No more buses today", nextTripId: null });
         }
-    }
+    });
+}
 
-
-    getStopTimes("9022003700021001", "9011003001100000", "11");
-});
 
 
 app.listen(PORT, () => {
