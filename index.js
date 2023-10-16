@@ -20,7 +20,7 @@ const config = JSON.parse(fs.readFileSync('./config.json'));
 
 // Config for GTFS import
 let gtfsConfig;
-if (release || true) {  //FIXA FFS!!!!
+if (release == true) {
     gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
     // FIX: Handle missing API key
     gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
