@@ -7,7 +7,6 @@ const PORT = 8080;
 import * as gtfs from 'gtfs';
 import * as dotenv from 'dotenv';
 import moment from 'moment';
-
 dotenv.config();
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
@@ -58,42 +57,82 @@ importData();
 
 app.get('/test/', async (req, res) => {
     try {
-        const result1 = await getStopTimes("9022003700021001", "9011003001100000", "11");
-        const result2 = await getStopTimes("9022003700021001", "9011003000300000", "3");
+        const result1 = await getStoptimesWithHeadsign("9022003700021002", "Sunnersta");
 
-        res.json({ results: [result1, result2] });
+        res.json({ results: [result1] });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+
+    async function getStoptimesWithHeadsign(stopId, headsign) {
+        return new Promise((resolve, reject) => {
+            let getBuss = gtfs.getStoptimes({
+                stop_id: stopId, stop_headsign: headsign
+
+            });
+            let allbusses = [];
+
+
+            const bussSorting = getBuss
+                .map(item => ({ arrivalTime: item.arrival_time }));
+
+            allbusses.push(...bussSorting);
+
+
+            allbusses.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
+            console.log(allbusses);
+
+            const currentTime = moment();
+            const nextArrival = allbusses.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
+            if (nextArrival) {
+                resolve({ nextArrivalTime: nextArrival.arrivalTime, stop_headsign: headsign });
+            }
+        });
+    };
 });
 
-async function getStopTimes(stopId, routeId, serviceId) {
-    return new Promise((resolve, reject) => {
-        const tripIds = gtfs.getTrips({ route_id: routeId, service_id: serviceId, direction_id: 0 });
-        const allStopTimes = [];
 
-        tripIds.forEach((tripId) => {
-            const stopTimes = gtfs.getStoptimes({ trip_id: tripId["trip_id"], stop_id: stopId });
 
-            const matchingStopTimes = stopTimes
-                .filter(item => item.stop_id === stopId)
-                .map(item => ({ tripId: tripId["trip_id"], arrivalTime: item.arrival_time }));
 
-            allStopTimes.push(...matchingStopTimes);
-        });
+//     try {
+//         const result1 = await getStopTimes("9022003700021001", "Sunnersta", "8");
+//         const result2 = await getStopTimes("9022003700021001", "Sunnersta", "8");
 
-        allStopTimes.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
+//         res.json({ results: [result1, result2] });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
 
-        const currentTime = moment();
-        const nextArrival = allStopTimes.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
 
-        if (nextArrival) {
-            resolve({ service_id: serviceId, nextArrivalTime: nextArrival.arrivalTime, routeId: routeId });
-        } else {
-            resolve({ nextArrivalTime: "No more buses today", nextTripId: null });
-        }
-    });
-}
+// async function getStopTimes(stopId, headsign, serviceId) {
+//     return new Promise((resolve, reject) => {
+//         const tripIds = gtfs.getTrips({ trip_headsign: headsign, service_id: serviceId, direction_id: 0 });
+//         const allStopTimes = [];
+
+//         tripIds.forEach((tripId) => {
+//             const stopTimes = gtfs.getStoptimes({ trip_id: tripId["trip_id"], stop_id: stopId });
+
+//             const matchingStopTimes = stopTimes
+//                 .filter(item => item.stop_id === stopId)
+//                 .map(item => ({ tripId: tripId["trip_id"], arrivalTime: item.arrival_time }));
+
+//             allStopTimes.push(...matchingStopTimes);
+//         });
+
+//         allStopTimes.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
+
+//         const currentTime = moment();
+//         const nextArrival = allStopTimes.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
+
+//         if (nextArrival) {
+//             resolve({ service_id: serviceId, nextArrivalTime: nextArrival.arrivalTime, routeId: routeId });
+//         } else {
+//             resolve({ nextArrivalTime: "No more buses today", nextTripId: null });
+//         }
+//     });
+// }
+
+
 
 
 
