@@ -57,9 +57,20 @@ importData();
 
 app.get('/test/', async (req, res) => {
     try {
-        const result1 = await getStoptimesWithHeadsign("9022003700021002", "Sunnersta");
+        // 3:an
+        const result1 = await getStoptimesWithHeadsign("9022003700021002", "Östra Gottsunda");
+        const result2 = await getStoptimesWithHeadsign("9022003700021001", "Nyby");
+        // 8:an
+        const result3 = await getStoptimesWithHeadsign("9022003700021002", "Sunnersta");
+        const result4 = await getStoptimesWithHeadsign("9022003700021001", "Ärna");
+        // 11: an
+        const result5 = await getStoptimesWithHeadsign("9022003700021002", "Vårdsätra Gottsunda");
+        const result6 = await getStoptimesWithHeadsign("9022003700021001", "Fyrislund");
+        // 12:an
+        const result7 = await getStoptimesWithHeadsign("9022003700021002", "Ulleråker Ultuna");
+        const result8 = await getStoptimesWithHeadsign("9022003700021001", "Eriksberg Flogsta Stenhagen");
 
-        res.json({ results: [result1] });
+        res.json({ results: [result1, result2, result3, result4, result5, result6, result7, result8] });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -68,7 +79,6 @@ app.get('/test/', async (req, res) => {
         return new Promise((resolve, reject) => {
             let getBuss = gtfs.getStoptimes({
                 stop_id: stopId, stop_headsign: headsign
-
             });
             let allbusses = [];
 
@@ -90,49 +100,6 @@ app.get('/test/', async (req, res) => {
         });
     };
 });
-
-
-
-
-//     try {
-//         const result1 = await getStopTimes("9022003700021001", "Sunnersta", "8");
-//         const result2 = await getStopTimes("9022003700021001", "Sunnersta", "8");
-
-//         res.json({ results: [result1, result2] });
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-
-
-// async function getStopTimes(stopId, headsign, serviceId) {
-//     return new Promise((resolve, reject) => {
-//         const tripIds = gtfs.getTrips({ trip_headsign: headsign, service_id: serviceId, direction_id: 0 });
-//         const allStopTimes = [];
-
-//         tripIds.forEach((tripId) => {
-//             const stopTimes = gtfs.getStoptimes({ trip_id: tripId["trip_id"], stop_id: stopId });
-
-//             const matchingStopTimes = stopTimes
-//                 .filter(item => item.stop_id === stopId)
-//                 .map(item => ({ tripId: tripId["trip_id"], arrivalTime: item.arrival_time }));
-
-//             allStopTimes.push(...matchingStopTimes);
-//         });
-
-//         allStopTimes.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
-
-//         const currentTime = moment();
-//         const nextArrival = allStopTimes.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
-
-//         if (nextArrival) {
-//             resolve({ service_id: serviceId, nextArrivalTime: nextArrival.arrivalTime, routeId: routeId });
-//         } else {
-//             resolve({ nextArrivalTime: "No more buses today", nextTripId: null });
-//         }
-//     });
-// }
-
-
 
 
 
