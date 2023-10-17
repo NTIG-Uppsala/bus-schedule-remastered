@@ -2,11 +2,16 @@ import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
 import express from 'express';
-const app = express();
-const PORT = 8080;
 import * as gtfs from 'gtfs';
 import * as dotenv from 'dotenv';
 import moment from 'moment';
+import { google } from "googleapis";
+
+
+
+
+const app = express();
+const PORT = 8080;
 dotenv.config();
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
@@ -54,7 +59,6 @@ async function importData() {
 }
 // Call importData to open the database connection
 importData();
-
 app.get('/test/', async (req, res) => {
     try {
         // 3:an
@@ -75,6 +79,23 @@ app.get('/test/', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 
+    const auth = new google.auth.GoogleAuth({
+        keyFile: "credentials.json",
+        scopes: "https://www.googleapis.com/auth/spreadsheets",
+    });
+    const client = await auth.getClient();
+
+    const googleSheets = google.sheets({ version: "v4", auth: client });
+
+    const spreadsheetId = "1XW0cmrudu_FTS7BwioJpQsrJeMvYy6J3tYoabZkbcKY";
+
+    const metaData = await googleSheets.spreadsheets.get({
+        auth,
+        spreadsheetId,
+    });
+
+
+
     async function getStoptimesWithHeadsign(stopId, headsign) {
         return new Promise((resolve, reject) => {
             let getBuss = gtfs.getStoptimes({
@@ -90,7 +111,6 @@ app.get('/test/', async (req, res) => {
 
 
             allbusses.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
-            console.log(allbusses);
 
             const currentTime = moment();
             const nextArrival = allbusses.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
