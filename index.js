@@ -60,24 +60,6 @@ async function importData() {
 // Call importData to open the database connection
 importData();
 app.get('/test/', async (req, res) => {
-    try {
-        // 3:an
-        const result1 = await getStoptimesWithHeadsign("9022003700021002", "Östra Gottsunda");
-        const result2 = await getStoptimesWithHeadsign("9022003700021001", "Nyby");
-        // 8:an
-        const result3 = await getStoptimesWithHeadsign("9022003700021002", "Sunnersta");
-        const result4 = await getStoptimesWithHeadsign("9022003700021001", "Ärna");
-        // 11: an
-        const result5 = await getStoptimesWithHeadsign("9022003700021002", "Vårdsätra Gottsunda");
-        const result6 = await getStoptimesWithHeadsign("9022003700021001", "Fyrislund");
-        // 12:an
-        const result7 = await getStoptimesWithHeadsign("9022003700021002", "Ulleråker Ultuna");
-        const result8 = await getStoptimesWithHeadsign("9022003700021001", "Eriksberg Flogsta Stenhagen");
-
-        res.json({ results: [result1, result2, result3, result4, result5, result6, result7, result8] });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
 
     const auth = new google.auth.GoogleAuth({
         keyFile: "credentials.json",
@@ -94,6 +76,32 @@ app.get('/test/', async (req, res) => {
         spreadsheetId,
     });
 
+    const getRows = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: "sheet1!A2:C5",
+    });
+    const result9 = getRows.data;
+
+    try {
+        // 3:an
+        const result1 = await getStoptimesWithHeadsign("9022003700021002", "Östra Gottsunda");
+        const result2 = await getStoptimesWithHeadsign("9022003700021001", "Nyby");
+        // 8:an
+        const result3 = await getStoptimesWithHeadsign("9022003700021002", "Sunnersta");
+        const result4 = await getStoptimesWithHeadsign("9022003700021001", "Ärna");
+        // 11: an
+        const result5 = await getStoptimesWithHeadsign("9022003700021002", "Vårdsätra Gottsunda");
+        const result6 = await getStoptimesWithHeadsign("9022003700021001", "Fyrislund");
+        // 12:an
+        const result7 = await getStoptimesWithHeadsign("9022003700021002", "Ulleråker Ultuna");
+        const result8 = await getStoptimesWithHeadsign("9022003700021001", "Eriksberg Flogsta Stenhagen");
+
+
+        res.json({ results: [result1, result2, result3, result4, result5, result6, result7, result8, result9] });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 
 
     async function getStoptimesWithHeadsign(stopId, headsign) {
