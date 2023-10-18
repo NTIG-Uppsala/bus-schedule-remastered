@@ -84,7 +84,6 @@ app.get('/NTIBusScreen/', async (req, res) => {
 
     let stopidList = [];
     let headsignList = [];
-    let direction = [];
 
     async function getInfoFromSheet() {
         const result = [];
@@ -95,22 +94,24 @@ app.get('/NTIBusScreen/', async (req, res) => {
             const headsign = sheetInput[i][2];
 
 
+
             const getAllstops = gtfs.getStops();
             const foundStop = getAllstops.find(item => item.stop_name === sheetStopName && item.platform_code === direction);
 
             if (foundStop) {
                 stopidList.push(foundStop.stop_id);
                 headsignList.push(headsign);
-            } else {
-                console.log("Stop not found in test array:", sheetStopName);
+                sheetInput.push(sheetStopName);
+
             }
         }
 
         for (let i = 0; i < stopidList.length; i++) {
             const stopId = stopidList[i];
             const headsign = headsignList[i];
-            const test = await getStoptimesWithHeadsign(stopId, headsign);
-            result.push({ stopId, headsign, ...test });
+            const stopName = sheetInput[i][0];
+            const respone = await getStoptimesWithHeadsign(stopId, headsign);
+            result.push({ stopId, stopName, headsign, ...respone });
         }
 
         // Now you can send the response after all requests are complete
