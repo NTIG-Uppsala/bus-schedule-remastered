@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
-import express from 'express';
+import express, { response } from 'express';
 import * as gtfs from 'gtfs';
 import * as dotenv from 'dotenv';
 import moment from 'moment';
@@ -78,55 +78,71 @@ app.get('/test/', async (req, res) => {
     const getRows = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
-        range: "sheet1!A2:C6",
+        range: "sheet1!B2:D100",
     });
     const sheetInput = getRows.data["values"];
-    try {
-        // 3:an
-        const result1 = await getStoptimesWithHeadsign("9022003700021002", "Östra Gottsunda");
-        const result2 = await getStoptimesWithHeadsign("9022003700021001", "Nyby");
-        // 8:an
-        const result3 = await getStoptimesWithHeadsign("9022003700021002", "Sunnersta");
-        const result4 = await getStoptimesWithHeadsign("9022003700021001", "Ärna");
-        // 11: an
-        const result5 = await getStoptimesWithHeadsign("9022003700021002", "Vårdsätra Gottsunda");
-        const result6 = await getStoptimesWithHeadsign("9022003700021001", "Fyrislund");
-        // 12:an
-        const result7 = await getStoptimesWithHeadsign("9022003700021002", "Ulleråker Ultuna");
-        const result8 = await getStoptimesWithHeadsign("9022003700021001", "Eriksberg Flogsta Stenhagen");
+
+    let stopidList = [];
+    let headsignList = [];
+    let direction = [];
+
+    async function getInfoFromSheet() {
+        const result = [];
+
+        for (let i = 0; i < sheetInput.length; i++) {
+            const sheetStopName = sheetInput[i][0];
+            let direction = sheetInput[i][1];
+            const headsign = sheetInput[i][2];
 
 
-        res.json({ results: [result1, result2, result3, result4, result5, result6, result7, result8] });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+            const getAllstops = gtfs.getStops();
+            const foundStop = getAllstops.find(item => item.stop_name === sheetStopName && item.platform_code === direction);
+
+            if (foundStop) {
+                stopidList.push(foundStop.stop_id);
+                headsignList.push(headsign);
+            } else {
+                console.log("Stop not found in test array:", sheetStopName);
+            }
+        }
+
+        for (let i = 0; i < stopidList.length; i++) {
+            const stopId = stopidList[i];
+            const headsign = headsignList[i];
+            const test = await getStoptimesWithHeadsign(stopId, headsign);
+            result.push({ stopId, headsign, ...test });
+        }
+
+        // Now you can send the response after all requests are complete
+        res.json(result);
     }
 
+    getInfoFromSheet();
 
     async function getStoptimesWithHeadsign(stopId, headsign) {
-        return new Promise((resolve, reject) => {
-            let getBuss = gtfs.getStoptimes({
-                stop_id: stopId, stop_headsign: headsign
-            });
-            let allbusses = [];
-
-
-            const bussSorting = getBuss
-                .map(item => ({ arrivalTime: item.arrival_time }));
-
-            allbusses.push(...bussSorting);
-
-
-            allbusses.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
-
-            const currentTime = moment();
-            const nextArrival = allbusses.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
-            if (nextArrival) {
-                resolve({ nextArrivalTime: nextArrival.arrivalTime, stop_headsign: headsign });
-            }
+        const getBuss = gtfs.getStoptimes({
+            stop_id: stopId,
+            stop_headsign: headsign
         });
-    };
-});
+        let allBusses = [];
 
+        const bussSorting = getBuss.map(item => ({ arrivalTime: item.arrival_time }));
+        allBusses.push(...bussSorting);
+
+        allBusses.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
+
+        const currentTime = moment();
+        const nextArrival = allBusses.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
+
+        if (nextArrival) {
+
+            return { nextArrivalTime: nextArrival.arrivalTime };
+        } else {
+            return null; // Or some default value when no next arrival is found
+        }
+    }
+
+});
 
 
 app.listen(PORT, () => {
