@@ -60,7 +60,6 @@ async function importData() {
 // Call importData to open the database connection
 importData();
 app.get('/test/', async (req, res) => {
-
     const auth = new google.auth.GoogleAuth({
         keyFile: "credentials.json",
         scopes: "https://www.googleapis.com/auth/spreadsheets",
@@ -79,10 +78,9 @@ app.get('/test/', async (req, res) => {
     const getRows = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
-        range: "sheet1!A2:C5",
+        range: "sheet1!A2:C6",
     });
-    const result9 = getRows.data;
-
+    const sheetInput = getRows.data["values"];
     try {
         // 3:an
         const result1 = await getStoptimesWithHeadsign("9022003700021002", "Östra Gottsunda");
@@ -98,7 +96,7 @@ app.get('/test/', async (req, res) => {
         const result8 = await getStoptimesWithHeadsign("9022003700021001", "Eriksberg Flogsta Stenhagen");
 
 
-        res.json({ results: [result1, result2, result3, result4, result5, result6, result7, result8, result9] });
+        res.json({ results: [result1, result2, result3, result4, result5, result6, result7, result8] });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
