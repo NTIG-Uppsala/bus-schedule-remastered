@@ -8,6 +8,8 @@ import moment from 'moment';
 import { google } from "googleapis";
 const app = express();
 const PORT = 8080;
+const maxImportTries = 5;
+let importSuccess = false;
 dotenv.config();
 
 // Does nothing ATM.
@@ -15,23 +17,15 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 // 
 const release = process.env.NODE_ENV === 'production';
 
-// Config for buses and stops
-// const config = JSON.parse(fs.readFileSync('./config.json'));
-
 // Config for GTFS import
 let gtfsConfig;
 if (release == true) {
     gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
-    // FIX: Handle missing API key
     gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
 } else {
     gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
 }
 
-const maxStopTimes = 100;
-const maxImportTries = 5;
-
-let importSuccess = false;
 
 async function importData() {
     // TODO: Add gtfsConfig as input param
@@ -60,22 +54,14 @@ app.get('/NTIBusScreen/', async (req, res) => {
         scopes: "https://www.googleapis.com/auth/spreadsheets",
     });
     const client = await auth.getClient();
-
     const googleSheets = google.sheets({ version: "v4", auth: client });
-
     const spreadsheetId = "1XW0cmrudu_FTS7BwioJpQsrJeMvYy6J3tYoabZkbcKY";
-
-    const metaData = await googleSheets.spreadsheets.get({
-        auth,
-        spreadsheetId,
-    });
-
+    const sheetInput = getRows.data["values"];
     const getRows = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
         range: "sheet1!B2:D100",
     });
-    const sheetInput = getRows.data["values"];
 
     let stopidList = [];
     let headsignList = [];
@@ -87,8 +73,6 @@ app.get('/NTIBusScreen/', async (req, res) => {
             const sheetStopName = sheetInput[i][0];
             let direction = sheetInput[i][1];
             const headsign = sheetInput[i][2];
-
-
 
             const getAllstops = gtfs.getStops();
             const foundStop = getAllstops.find(item => item.stop_name === sheetStopName && item.platform_code === direction);
@@ -109,7 +93,6 @@ app.get('/NTIBusScreen/', async (req, res) => {
             result.push({ stopId, stopName, headsign, ...respone });
         }
 
-        // Now you can send the response after all requests are complete
         res.json(result);
     }
 
@@ -131,15 +114,12 @@ app.get('/NTIBusScreen/', async (req, res) => {
         const nextArrival = allBusses.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
 
         if (nextArrival) {
-
             return { nextArrivalTime: nextArrival.arrivalTime };
         } else {
             return null; // Or some default value when no next arrival is found
         }
     }
-
 });
-
 
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
