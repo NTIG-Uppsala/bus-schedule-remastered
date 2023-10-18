@@ -56,12 +56,12 @@ app.get('/NTIBusScreen/', async (req, res) => {
     const client = await auth.getClient();
     const googleSheets = google.sheets({ version: "v4", auth: client });
     const spreadsheetId = "1XW0cmrudu_FTS7BwioJpQsrJeMvYy6J3tYoabZkbcKY";
-    const sheetInput = getRows.data["values"];
     const getRows = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
         range: "sheet1!B2:D100",
     });
+    const sheetInput = getRows.data["values"];
 
     let stopidList = [];
     let headsignList = [];
