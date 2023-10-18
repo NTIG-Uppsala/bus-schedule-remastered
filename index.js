@@ -6,22 +6,17 @@ import * as gtfs from 'gtfs';
 import * as dotenv from 'dotenv';
 import moment from 'moment';
 import { google } from "googleapis";
-
-
-
-
 const app = express();
 const PORT = 8080;
 dotenv.config();
 
+// Does nothing ATM.
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
-
+// 
 const release = process.env.NODE_ENV === 'production';
 
-// FIX: Handle possible missing files when using fs.readFileSync on config
-// files
 // Config for buses and stops
-const config = JSON.parse(fs.readFileSync('./config.json'));
+// const config = JSON.parse(fs.readFileSync('./config.json'));
 
 // Config for GTFS import
 let gtfsConfig;
