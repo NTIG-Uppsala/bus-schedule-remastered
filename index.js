@@ -59,7 +59,7 @@ async function importData() {
 }
 // Call importData to open the database connection
 importData();
-app.get('/test/', async (req, res) => {
+app.get('/NTIBusScreen/', async (req, res) => {
     const auth = new google.auth.GoogleAuth({
         keyFile: "credentials.json",
         scopes: "https://www.googleapis.com/auth/spreadsheets",
