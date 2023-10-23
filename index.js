@@ -8,7 +8,6 @@ import { google } from "googleapis";
 const app = express();
 const PORT = 8080;
 const maxImportTries = 5;
-const numberOfUpcomingBusses = 10
 let importSuccess = false;
 dotenv.config();
 let gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
@@ -93,9 +92,9 @@ app.get('/NTIBusScreen/', async (req, res) => {
                 }
             }
         
-            // Sort unique times and keep 'numberOfUpcomingBusses' of the closest times
+            // Sort unique times and keep the closest 5
             const sortedTimes = Array.from(addedTimes).filter(time => moment(time, 'HH:mm:ss').isAfter(currentTime)).sort();
-            const closestTimes = sortedTimes.slice(0, numberOfUpcomingBusses);
+            const closestTimes = sortedTimes.slice(0, 5);
         
             // Add the closest times to upcomingBusses
             closestTimes.forEach(timeKey => {
