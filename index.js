@@ -1,14 +1,16 @@
 import * as fs from 'fs';
-import express, { response } from 'express';
+import express from 'express';
 import * as gtfs from 'gtfs';
 import * as dotenv from 'dotenv';
 import moment from 'moment';
 import { google } from "googleapis";
+
 const app = express();
 const PORT = 8080;
 const maxImportTries = 5;
 let importSuccess = false;
 dotenv.config();
+let gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
 
 // This function attempts to import GTFS data and retries up to 'maxImportTries' times.
 async function importData() {
@@ -67,19 +69,8 @@ app.get('/NTIBusScreen/', async (req, res) => {
                     result.push({ stopId: foundStop.stop_id, stopName: sheetStopName, headsign });
                 }
             }
+            return result;
         }
-        // Loops for each stop in the list and pushes it to the result array
-        for (let i = 0; i < stopIdList.length; i++) {
-            const stopId = stopIdList[i];
-            const headsign = headsignList[i];
-            const stopName = sheetInput[i][0];
-            const respone = await getStoptimesWithHeadsign(stopId, headsign);
-            result.push({ stopId, stopName, headsign, ...respone });
-        }
-        //prints the result array to the screen
-        res.json(result);
-    }
-    getInfoFromSheet();
 
         // Create a function to get bus times for a specific stop and headsign
         async function getStoptimesWithHeadsign(stopId, headsign) {
@@ -119,24 +110,15 @@ app.get('/NTIBusScreen/', async (req, res) => {
             const response = await getStoptimesWithHeadsign(stopId, headsign);
             return { ...stop, upcomingBusses: response };
         });
-        let allBusses = [];
-        // Loops for each bus and pushes the arrival time to a list and sorts it to the nearest arrival time
-        const bussSorting = getBuss.map(item => ({ arrivalTime: item.arrival_time }));
-        allBusses.push(...bussSorting);
-        allBusses.sort((a, b) => a.arrivalTime.localeCompare(b.arrivalTime));
-        // Gets current time and finds the next arrival time
-        const currentTime = moment();
-        const nextArrival = allBusses.find(item => moment(item.arrivalTime, 'HH:mm:ss').isAfter(currentTime));
-        // Returns the next arrival time
-        if (nextArrival) {
-            return { nextArrivalTime: nextArrival.arrivalTime };
-        } else {
-            return null; // Or some default value when no next arrival is found
-        }
+
+        const busTimes = await Promise.all(busTimesPromises);
+        res.json(busTimes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error retrieving bus times');
     }
 });
 
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
 });
-s
