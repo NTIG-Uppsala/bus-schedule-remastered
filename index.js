@@ -12,12 +12,10 @@ let importSuccess = false;
 dotenv.config();
 let gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
 
-
+// This function attempts to import GTFS data and retries up to 'maxImportTries' times.
 async function importData() {
-    // Tries to import, if it fails it will try again until it succeeds or maxImportTries is reached
     for (let i = 0; i < maxImportTries; i++) {
         try {
-            // Import GTFS data into the database
             if (!fs.existsSync(gtfsConfig.sqlitePath)) {
                 await gtfs.importGtfs(gtfsConfig);
             }
@@ -32,11 +30,12 @@ async function importData() {
         }
     }
 }
+
 importData();
 
 app.get('/NTIBusScreen/', async (req, res) => {
     try {
-        // Accesses the google sheet for admins to add stops and headsigns
+        // Accesses the Google Sheet for admins to add stops and headsigns
         const auth = new google.auth.GoogleAuth({
             keyFile: "credentials.json",
             scopes: "https://www.googleapis.com/auth/spreadsheets",
@@ -44,6 +43,8 @@ app.get('/NTIBusScreen/', async (req, res) => {
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: "v4", auth: client });
         const spreadsheetId = "1XW0cmrudu_FTS7BwioJpQsrJeMvYy6J3tYoabZkbcKY";
+        
+        // Fetch data from the Google Sheet
         const getRows = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
@@ -54,14 +55,15 @@ app.get('/NTIBusScreen/', async (req, res) => {
         // Create a function to get all bus stops and headsigns
         async function getAllBusStopsAndHeadsigns() {
             const result = [];
-            // Loop through each cell in the Google Sheet
             for (let i = 0; i < sheetInput.length; i++) {
                 const sheetStopName = sheetInput[i][0];
                 let direction = sheetInput[i][1];
                 const headsign = sheetInput[i][2];
-                const getAllstops = gtfs.getStops(); // Gets all stops from GTFS
+                const getAllstops = gtfs.getStops();
+                
                 // Search for the stop name and direction in GTFS
                 const foundStop = getAllstops.find(item => item.stop_name === sheetStopName && item.platform_code === direction);
+                
                 // If the stop is found, add the stop_id to the result array
                 if (foundStop) {
                     result.push({ stopId: foundStop.stop_id, stopName: sheetStopName, headsign });
@@ -70,6 +72,7 @@ app.get('/NTIBusScreen/', async (req, res) => {
             return result;
         }
 
+        // Create a function to get bus times for a specific stop and headsign
         async function getStoptimesWithHeadsign(stopId, headsign) {
             const getBuss = gtfs.getStoptimes({
                 stop_id: stopId,
@@ -78,7 +81,7 @@ app.get('/NTIBusScreen/', async (req, res) => {
         
             const currentTime = moment();
             const upcomingBusses = [];
-            const addedTimes = new Set(); // För att lagra unika tider
+            const addedTimes = new Set(); // To store unique times
         
             for (let i = 0; i < getBuss.length; i++) {
                 const arrivalTime = moment(getBuss[i].arrival_time, 'HH:mm:ss');
@@ -89,19 +92,18 @@ app.get('/NTIBusScreen/', async (req, res) => {
                 }
             }
         
-            // Sortera de unika tider och behåll de närmaste 5
+            // Sort unique times and keep the closest 5
             const sortedTimes = Array.from(addedTimes).filter(time => moment(time, 'HH:mm:ss').isAfter(currentTime)).sort();
             const closestTimes = sortedTimes.slice(0, 5);
         
-            // Lägg till de närmaste tiderna i upcomingBusses
+            // Add the closest times to upcomingBusses
             closestTimes.forEach(timeKey => {
                 upcomingBusses.push({ arrivalTime: timeKey });
             });
         
             return upcomingBusses;
         }
-    
-        
+
         const busStopsAndHeadsigns = await getAllBusStopsAndHeadsigns();
         const busTimesPromises = busStopsAndHeadsigns.map(async (stop) => {
             const { stopId, headsign } = stop;
