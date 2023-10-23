@@ -12,19 +12,8 @@ const maxImportTries = 5;
 let importSuccess = false;
 dotenv.config();
 
-// Does nothing ATM.
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const release = process.env.NODE_ENV === 'production';
-
 // Config for GTFS import
-let gtfsConfig;
-if (release == true) {
-    gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
-    gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
-} else {
-    gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
-}
-
+let gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
 
 async function importData() {
     // Tries to import, if it fails it will try again until it succeeds or maxImportTries is reached
@@ -45,6 +34,7 @@ async function importData() {
         }
     }
 }
+
 importData();
 
 app.get('/NTIBusScreen/', async (req, res) => {
