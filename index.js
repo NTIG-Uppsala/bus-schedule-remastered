@@ -32,7 +32,6 @@ async function importData() {
     }
 }
 
-
 importData();
 
 app.get('/NTIBusScreen/', async (req, res) => {
