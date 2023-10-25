@@ -11,7 +11,7 @@ const maxImportTries = 3;
 const numberOfUpcomingBusses = 3
 let importSuccess = false;
 dotenv.config();
-let gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
+let gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
 
 // This function attempts to import GTFS data and retries up to 'maxImportTries' times.
 async function importData() {
