@@ -11,7 +11,19 @@ const maxImportTries = 3;
 const numberOfUpcomingBusses = 3
 let importSuccess = false;
 dotenv.config();
-let gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
+
+// Checking in .env file if NODE_ENV === 'production'
+const release = process.env.NODE_ENV === 'production';
+
+// Config for GTFS import
+let gtfsConfig;
+if (release == true) {
+    gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
+    gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
+} else {
+    gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
+    
+}
 
 // This function attempts to import GTFS data and retries up to 'maxImportTries' times.
 async function importData() {
