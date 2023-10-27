@@ -84,18 +84,19 @@ app.get('/NTIBusScreen/', async (req, res) => {
                 }
             }
             return result;
-        }   
+        }
 
         // Create a function to get bus times for a specific stop and headsign
         async function getStoptimesWithHeadsign(stopId, headsign) {
-            const getBus = gtfs.getStoptimes({
+            const getBuss = gtfs.getStoptimes({
                 stop_id: stopId,
                 stop_headsign: headsign
             });
+
             const currentTime = moment();
             const upcomingBusses = [];
-            const addedTimes = new Set(); // To store unique times
-        
+            const addedTimes = new Set(); // Set to keep unique times and be able to print them in order
+
             for (let i = 0; i < getBus.length; i++) {
                 const arrivalTime = moment(getBus[i].arrival_time, 'HH:mm:ss');
                 const timeKey = arrivalTime.format('HH:mm:ss');
