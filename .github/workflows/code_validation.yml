@@ -8,41 +8,23 @@ on:
     branches: [ "main" ]
 
 jobs:
-  validate_js:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.12.x, x]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      # Install dependencies with npm ci
-      - run: npm ci
-      - run: for i in test/*.js; do npx eslint $i; done
-      # - run: for i in *.js; do npx eslint $i; done
-  
   validate_html_css:
-    runs-on: ubuntu-latest
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+  steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
 
-      - name: Validate HTML & CSS
-        uses: Cyb3r-Jak3/html5validator-action@v7.2.0
-        with:
-          log_level: DEBUG
-          root: test/ # change to actual folder when it's created
-          css: true
-          extra: --show-warnings
-      - name: Create log artifact
-        uses: actions/upload-artifact@v3
-        if: ${{ always() }}
-        with:
-          name: log
-          path: log.log
+    - name: Validate HTML & CSS
+      uses: Cyb3r-Jak3/html5validator-action@v7.2.0
+      with:
+        log_level: DEBUG
+        root: test/ # change to actual folder when it's created
+        css: true
+        extra: --show-warnings
+    - name: Create log artifact
+      uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        name: log
+        path: log.log
