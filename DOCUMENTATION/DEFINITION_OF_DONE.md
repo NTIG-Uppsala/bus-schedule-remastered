@@ -5,8 +5,11 @@ It aligns with the goal of the product we are creating.
 * No placeholders; everything should be in a presentable state.
 * Documented in case new modules/advanced code have been added.
 * The card has been moved to "done."
+* Everything has to be presentable 
+
 # For code:
 * The code has been reviewed by at least one other person. 
 * Uploaded correctly to GitHub.
 * Tests have passed.
-* No errors during validation
+* No errors during validation.
+* For a feature to be considered done, it has to be pushed to main branch.
