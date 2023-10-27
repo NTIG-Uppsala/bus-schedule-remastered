@@ -61,9 +61,9 @@ app.get('/NTIBusScreen/', async (req, res) => {
         const getRows = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
+            // Fetching the data from the following range, and only uses the cells with values in them.
             range: "sheet1!B2:D100",
         });
-        // This only gets the values from cells that are not empty
         const sheetInput = getRows.data["values"];
 
         // Create a function to get all bus stops and headsigns
