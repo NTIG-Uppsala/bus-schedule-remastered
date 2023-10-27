@@ -22,7 +22,7 @@ if (release == true) {
     gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
 } else {
     gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
-    
+
 }
 
 // This function attempts to import GTFS data and retries up to 'maxImportTries' times.
@@ -56,11 +56,12 @@ app.get('/NTIBusScreen/', async (req, res) => {
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: "v4", auth: client });
         const spreadsheetId = "1XW0cmrudu_FTS7BwioJpQsrJeMvYy6J3tYoabZkbcKY";
-        
+
         // Fetch data from the Google Sheet
         const getRows = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
+            // Fetching the data from the following range, and only uses the cells with values in them.
             range: "sheet1!B2:D100",
         });
         const sheetInput = getRows.data["values"];
@@ -73,10 +74,10 @@ app.get('/NTIBusScreen/', async (req, res) => {
                 let direction = sheetInput[i][1];
                 const headsign = sheetInput[i][2];
                 const getAllstops = gtfs.getStops();
-                
+
                 // Search for the stop name and direction in GTFS
                 const foundStop = getAllstops.find(item => item.stop_name === sheetStopName && item.platform_code === direction);
-                
+
                 // If the stop is found, add the stop_id to the result array
                 if (foundStop) {
                     result.push({ stopId: foundStop.stop_id, stopName: sheetStopName, headsign });
@@ -98,21 +99,21 @@ app.get('/NTIBusScreen/', async (req, res) => {
             for (let i = 0; i < getBus.length; i++) {
                 const arrivalTime = moment(getBus[i].arrival_time, 'HH:mm:ss');
                 const timeKey = arrivalTime.format('HH:mm:ss');
-        
+
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey)) {
                     addedTimes.add(timeKey);
                 }
             }
-        
+
             // Sort unique times and keep 'numberOfUpcomingBusses' of the closest times
             const sortedTimes = Array.from(addedTimes).filter(time => moment(time, 'HH:mm:ss').isAfter(currentTime)).sort();
             const closestTimes = sortedTimes.slice(0, numberOfUpcomingBusses);
-        
+
             // Add the closest times to upcomingBusses
             closestTimes.forEach(timeKey => {
                 upcomingBusses.push({ arrivalTime: timeKey });
             });
-        
+
             return upcomingBusses;
         }
 
