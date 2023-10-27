@@ -88,7 +88,7 @@ app.get('/NTIBusScreen/', async (req, res) => {
 
         // Create a function to get bus times for a specific stop and headsign
         async function getStoptimesWithHeadsign(stopId, headsign) {
-            const getBuss = gtfs.getStoptimes({
+            const getBus = gtfs.getStoptimes({
                 stop_id: stopId,
                 stop_headsign: headsign
             });
