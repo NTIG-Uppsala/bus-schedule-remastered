@@ -49,8 +49,9 @@ importData();
 app.get('/NTIBusScreen/', async (req, res) => {
     try {
         // Accesses the Google Sheet for admins to add stops and headsigns
+        const credentials = JSON.parse(process.env.CREDENTIALS_JSON);
         const auth = new google.auth.GoogleAuth({
-            keyFile: "credentials.json",
+            credentials,
             scopes: "https://www.googleapis.com/auth/spreadsheets",
         });
         const client = await auth.getClient();
