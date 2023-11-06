@@ -105,3 +105,6 @@ dist
 
 # SQLite DB
 *.sqlite
+
+# Credentials
+credentials.json
