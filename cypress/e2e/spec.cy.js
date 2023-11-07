@@ -1,5 +1,9 @@
 describe('My First Test', () => {
-    it('Does not do much!', () => {
-      expect(true).to.equal(true)
+    it('example', () => {
+
+        cy.visit('localhost:8080/NTIBusScreen/') 
+        cy.contains('Lundellska skolan')
+      
     })
-  })
+})   
+

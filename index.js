@@ -49,9 +49,8 @@ importData();
 app.get('/NTIBusScreen/', async (req, res) => {
     try {
         // Accesses the Google Sheet for admins to add stops and headsigns
-        const credentials = JSON.parse(process.env.CREDENTIALS_JSON);
         const auth = new google.auth.GoogleAuth({
-            credentials,
+            keyFile: 'credentials.json',
             scopes: "https://www.googleapis.com/auth/spreadsheets",
         });
         const client = await auth.getClient();
@@ -127,7 +126,9 @@ app.get('/NTIBusScreen/', async (req, res) => {
         });
 
         const busTimes = await Promise.all(busTimesPromises);
-        res.json(busTimes);
+        //res.json(busTimes);
+        res.send("<html>" + JSON.stringify(busTimes) + "</html>");
+        
     } catch (error) {
         console.error(error);
         res.status(500).send('Error retrieving bus times');
