@@ -134,7 +134,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
 
         const busTimes = await Promise.all(busTimesPromises);
         //res.json(busTimes);
-        res.send("<html>" + JSON.stringify(busTimes, null, '\t') + "</html>");
+        res.send("<html>" + JSON.stringify(busTimes) + "</html>");
         
     } catch (error) {
         console.error(error);
