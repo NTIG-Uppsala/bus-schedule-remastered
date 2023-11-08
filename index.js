@@ -101,7 +101,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             if (req.params.date === undefined) {
                 currentTime = moment();
             } else {
-                currentTime = moment(req.params.date,'HH:mm:ss');
+                currentTime = moment(req.params.date, 'HH:mm:ss');
             }
 
             for (let i = 0; i < getBus.length; i++) {
@@ -129,12 +129,12 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
         const busTimesPromises = busStopsAndHeadsigns.map(async (stop) => {
             const { stopId, headsign } = stop;
             const response = await getStoptimesWithHeadsign(stopId, headsign);
-            return { ...stop, upcomingBusses: response };
+            return { ...stop, upcomingBusses: response};
         });
 
         const busTimes = await Promise.all(busTimesPromises);
         //res.json(busTimes);
-        res.send("<html>" + JSON.stringify(busTimes) + "</html>");
+        res.send("<html>" + JSON.stringify(busTimes, null, '\t') + "</html>");
         
     } catch (error) {
         console.error(error);
