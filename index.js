@@ -46,7 +46,9 @@ async function importData() {
 
 importData();
 
-app.get('/NTIBusScreen/', async (req, res) => {
+
+
+app.get('/NTIBusScreen/:date?', async (req, res) => {
     try {
         // Accesses the Google Sheet for admins to add stops and headsigns
         const auth = new google.auth.GoogleAuth({
@@ -93,9 +95,14 @@ app.get('/NTIBusScreen/', async (req, res) => {
                 stop_headsign: headsign
             });
 
-            const currentTime = moment();
+            let currentTime;
             const upcomingBusses = [];
             const addedTimes = new Set(); // Set to keep unique times and be able to print them in order
+            if (req.params.date === undefined) {
+                currentTime = moment();
+            } else {
+                currentTime = moment(req.params.date,'HH:mm:ss');
+            }
 
             for (let i = 0; i < getBus.length; i++) {
                 const arrivalTime = moment(getBus[i].arrival_time, 'HH:mm:ss');
