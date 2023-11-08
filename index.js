@@ -133,9 +133,11 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
         });
 
         const busTimes = await Promise.all(busTimesPromises);
-        //res.json(busTimes);
-        res.send("<html>" + JSON.stringify(busTimes) + "</html>");
-        
+        let busTimeList = []
+        for (let bus = 0;bus <= busTimes.length-1; bus++) {
+            busTimeList.push(JSON.stringify(busTimes[bus]) + "<br>" + "<br>")
+        };
+        res.send("<html>"+ busTimeList + "</html>");
     } catch (error) {
         console.error(error);
         res.status(500).send('Error retrieving bus times');
