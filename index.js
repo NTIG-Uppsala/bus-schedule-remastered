@@ -142,6 +142,6 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Listening on ${PORT}`);
+app.listen(PORT, '127.0.0.1', () => {
+    console.log(`Listening on http://127.0.0.1:${PORT}/NTIBusScreen/`);
 });
