@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node download_sheet && nodemon index.js",
     "release": "run-script-os",
     "release:win32": "set NODE_ENV=production && node ./index.js",
     "release:default": "echo 'Platform is not recognized or not supported'",
