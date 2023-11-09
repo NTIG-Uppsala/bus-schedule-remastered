@@ -46,11 +46,13 @@ async function importData() {
 
 importData();
 
-app.get('/NTIBusScreen/', async (req, res) => {
+
+
+app.get('/NTIBusScreen/:date?', async (req, res) => {
     try {
         // Accesses the Google Sheet for admins to add stops and headsigns
         const auth = new google.auth.GoogleAuth({
-            keyFile: "credentials.json",
+            keyFile: 'credentials.json',
             scopes: "https://www.googleapis.com/auth/spreadsheets",
         });
         const client = await auth.getClient();
@@ -93,21 +95,26 @@ app.get('/NTIBusScreen/', async (req, res) => {
                 stop_headsign: headsign
             });
 
-            const currentTime = moment();
+            let currentTime;
             const upcomingBusses = [];
             const addedTimes = new Set(); // Set to keep unique times and be able to print them in order
+            if (req.params.date === undefined) {
+                currentTime = moment();
+            } else {
+                currentTime = moment(req.params.date);
+            }
 
             for (let i = 0; i < getBus.length; i++) {
-                const arrivalTime = moment(getBus[i].arrival_time, 'HH:mm:ss');
+                const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]);
                 const timeKey = arrivalTime.format('HH:mm:ss');
-
+                // checks if time has already beeb added
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey)) {
                     addedTimes.add(timeKey);
                 }
             }
 
             // Sort unique times and keep 'numberOfUpcomingBusses' of the closest times
-            const sortedTimes = Array.from(addedTimes).filter(time => moment(time, 'HH:mm:ss').isAfter(currentTime)).sort();
+            const sortedTimes = Array.from(addedTimes).filter(time => moment(currentTime).set('hour', time.split(":")[0]).set('minute', time.split(":")[1]).isAfter(currentTime)).sort();
             const closestTimes = sortedTimes.slice(0, numberOfUpcomingBusses);
 
             // Add the closest times to upcomingBusses
@@ -122,17 +129,21 @@ app.get('/NTIBusScreen/', async (req, res) => {
         const busTimesPromises = busStopsAndHeadsigns.map(async (stop) => {
             const { stopId, headsign } = stop;
             const response = await getStoptimesWithHeadsign(stopId, headsign);
-            return { ...stop, upcomingBusses: response };
+            return { ...stop, upcomingBusses: response};
         });
 
         const busTimes = await Promise.all(busTimesPromises);
-        res.json(busTimes);
+        let busTimeList = []
+        for (let bus = 0;bus <= busTimes.length-1; bus++) {
+            busTimeList.push(JSON.stringify(busTimes[bus]) + "<br>" + "<br>")
+        };
+        res.send("<html>"+ busTimeList + "</html>");
     } catch (error) {
         console.error(error);
         res.status(500).send('Error retrieving bus times');
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Listening on ${PORT}`);
+app.listen(PORT, '127.0.0.1', () => {
+    console.log(`Listening on http://127.0.0.1:${PORT}/NTIBusScreen/`);
 });

@@ -1,0 +1,13 @@
+{
+  "agencies": [
+    {
+      "path": "./data/testdata_extra.zip",
+      "exclude": [
+
+        "attributions"
+
+      ]
+    }
+  ],
+  "sqlitePath": "./data/gtfs.sqlite"
+}

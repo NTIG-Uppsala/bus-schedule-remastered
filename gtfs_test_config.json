@@ -1,25 +1,12 @@
 {
   "agencies": [
     {
-      "path": "./data/testdata.zip",
+      "path": "./data/testdata_extra.zip",
       "exclude": [
-        "agency",
-        "areas",
+
         "attributions",
-        "calendar_dates",
-        "calendar",
-        "fare_attributes",
-        "fare_leg_rules",
-        "fare_products",
-        "fare_rules",
-        "fare_transfer_rules",
-        "feed_info",
-        "frequencies",
-        "levels",
-        "pathways",
-        "shapes",
-        "stop_areas",
-        "transfers"
+        "shapes"
+
       ]
     }
   ],
