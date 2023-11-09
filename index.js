@@ -107,7 +107,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             for (let i = 0; i < getBus.length; i++) {
                 const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]);
                 const timeKey = arrivalTime.format('HH:mm:ss');
-
+                // checks if time has already beeb added
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey)) {
                     addedTimes.add(timeKey);
                 }

@@ -1,3 +1,5 @@
+// Run npm start berfore running tests
+
 describe('Tests', () => {
     const jsonName = 'busData.json';
     beforeEach(() => {
