@@ -18,16 +18,5 @@ describe('Tests', () => {
     it('nextBusListNotEmpty', () => {
         cy.visit('127.0.0.1:8080/NTIBusScreen/2023-11-08T23:59:59');
         cy.contains('"upcomingBusses":[]').should('not.exist');
-
-
     });
-    // it('nextBusListShouldNotBeEmpty', () => {
-    //     cy.visit('127.0.0.1:8080/NTIBusScreen/13:59:59');
-    //     if (cy.contains('"upcomingBusses":[]')) {
-    //         throw new Error("upcomingBusses is empty")
-    //     };
-
-    // });
-
-
 });
