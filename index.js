@@ -101,20 +101,20 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             if (req.params.date === undefined) {
                 currentTime = moment();
             } else {
-                currentTime = moment(req.params.date, 'HH:mm:ss');
+                currentTime = moment(req.params.date);
             }
 
             for (let i = 0; i < getBus.length; i++) {
-                const arrivalTime = moment(getBus[i].arrival_time, 'HH:mm:ss');
+                const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]);
                 const timeKey = arrivalTime.format('HH:mm:ss');
-
+                // checks if time has already beeb added
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey)) {
                     addedTimes.add(timeKey);
                 }
             }
 
             // Sort unique times and keep 'numberOfUpcomingBusses' of the closest times
-            const sortedTimes = Array.from(addedTimes).filter(time => moment(time, 'HH:mm:ss').isAfter(currentTime)).sort();
+            const sortedTimes = Array.from(addedTimes).filter(time => moment(currentTime).set('hour', time.split(":")[0]).set('minute', time.split(":")[1]).isAfter(currentTime)).sort();
             const closestTimes = sortedTimes.slice(0, numberOfUpcomingBusses);
 
             // Add the closest times to upcomingBusses

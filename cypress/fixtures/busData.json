@@ -1,0 +1,115 @@
+[
+  {
+    "Linje": 1,
+    "Hållplats": "Uppsala Lundellska skolan",
+    "Läge": "C",
+    "Bussnamn": "Boländerna Gränbystaden",
+    "Dokumentation:": "länk",
+    "Bussnamn att välja mellan": "Akademiska sjukhuset Ekonomikum",
+    "Hållpatser": "Uppsala Lundellska skolan",
+    "Tillgängliga Lägen": "A"
+  },
+  {
+    "Linje": 1,
+    "Hållplats": "Uppsala Lundellska skolan",
+    "Läge": "D",
+    "Bussnamn": "Rosendal Akademiska sjukhuset",
+    "Bussnamn att välja mellan": "Boländerna",
+    "Hållpatser": "Uppsala Polacksbacken",
+    "Tillgängliga Lägen": "B"
+  },
+  {
+    "Linje": 3,
+    "Hållplats": "Uppsala Regementsvägen",
+    "Läge": "A",
+    "Bussnamn": "Nyby",
+    "Bussnamn att välja mellan": "Boländerna Gränbystaden",
+    "Hållpatser": "Uppsala Regementsvägen",
+    "Tillgängliga Lägen": "C"
+  },
+  {
+    "Linje": 3,
+    "Hållplats": "Uppsala Regementsvägen",
+    "Läge": "B",
+    "Bussnamn": "Östra Gottsunda",
+    "Bussnamn att välja mellan": "Campus Ultuna",
+    "Tillgängliga Lägen": "D"
+  },
+  {
+    "Linje": 4,
+    "Hållplats": "Uppsala Polacksbacken",
+    "Läge": "A",
+    "Bussnamn": "Gränbystaden Norra Årsta",
+    "Bussnamn att välja mellan": "Centralstationen"
+  },
+  {
+    "Linje": 4,
+    "Hållplats": "Uppsala Polacksbacken",
+    "Läge": "B",
+    "Bussnamn": "Ultuna Gottsunda",
+    "Bussnamn att välja mellan": "Engelska skolan"
+  },
+  {
+    "Linje": 8,
+    "Hållplats": "Uppsala Regementsvägen",
+    "Läge": "A",
+    "Bussnamn": "Ärna",
+    "Bussnamn att välja mellan": "Eriksberg Flogsta Stenhagen"
+  },
+  {
+    "Linje": 8,
+    "Hållplats": "Uppsala Regementsvägen",
+    "Läge": "B",
+    "Bussnamn": "Sunnersta",
+    "Bussnamn att välja mellan": "Fyrislund"
+  },
+  {
+    "Linje": 11,
+    "Hållplats": "Uppsala Regementsvägen",
+    "Läge": "A",
+    "Bussnamn": "Fyrislund",
+    "Bussnamn att välja mellan": "Gränbystaden Norra Årsta"
+  },
+  {
+    "Linje": 11,
+    "Hållplats": "Uppsala Regementsvägen",
+    "Läge": "B",
+    "Bussnamn": "Vårdsätra Gottsunda",
+    "Bussnamn att välja mellan": "Nyby"
+  },
+  {
+    "Linje": 12,
+    "Hållplats": "Uppsala Polacksbacken",
+    "Läge": "A",
+    "Bussnamn": "Eriksberg Flogsta Stenhagen",
+    "Bussnamn att välja mellan": "Rosendal Akademiska sjukhuset"
+  },
+  {
+    "Linje": 12,
+    "Hållplats": "Uppsala Polacksbacken",
+    "Läge": "B",
+    "Bussnamn": "Ultuna",
+    "Bussnamn att välja mellan": "Sunnersta"
+  },
+  {
+    "Bussnamn att välja mellan": "Ulleråker Ultuna"
+  },
+  {
+    "Bussnamn att välja mellan": "Ultuna"
+  },
+  {
+    "Bussnamn att välja mellan": "Ultuna Gottsunda"
+  },
+  {
+    "Bussnamn att välja mellan": "Uppsala"
+  },
+  {
+    "Bussnamn att välja mellan": "Vårdsätra Gottsunda"
+  },
+  {
+    "Bussnamn att välja mellan": "Ärna"
+  },
+  {
+    "Bussnamn att välja mellan": "Östra Gottsunda"
+  }
+]
