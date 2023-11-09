@@ -2,7 +2,6 @@ import { google } from 'googleapis';
 import fs from 'fs';
 import * as XLSX from 'xlsx/xlsx.mjs';
 import * as path from 'path';
-import { promise } from 'selenium-webdriver';
 XLSX.set_fs(fs);
 
 async function downloadFile() {
