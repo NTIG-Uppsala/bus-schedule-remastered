@@ -9,7 +9,7 @@ import { google } from "googleapis";
 const app = express();
 const PORT = 8080;
 const maxImportTries = 3;
-const numberOfUpcomingbuses = 2;
+const numberOfUpcomingBuses = 2;
 let importSuccess = false;
 dotenv.config();
 
@@ -75,12 +75,14 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             currentTime = moment(req.params.date);
         }
 
-        const getDates = gtfs.getTripsDatedVehicleJourneys({
-            operating_day_date: currentTime.format('YYYYMMDD'),
-        },['trip_id']);
+        const getDates = gtfs.getCalendarDates({
+            date: currentTime.format('YYYYMMDD'),
+        },['service_id']);
         const allTripsToday = getDates.map(function(item){
-            return item.trip_id;
+            return item.service_id;
         });
+        const trips = gtfs.getTrips({}, ['service_id', 'trip_id']);
+        console.log(trips)
         // Create a function to get all bus stops and headsigns
         async function getAllBusStopsAndHeadsigns() {
             const result = [];
@@ -109,10 +111,14 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             });
             const addedTimes = new Set(); // Set to keep unique times and be able to print them in order
 
-
             for (let i = 0; i < getBus.length; i++) {
+                for (let y = 0; y < trips.length; y++) {
+                    if (trips[y].trip_id === getBus[i].trip_id) {
+                        getBus[i].service_id = trips[y].service_id;
+                    }
+                }
                 // skips buses that are not running today 
-                if (!allTripsToday.includes(getBus[i].trip_id) && (!getBus[i].stop_headsign === "Eriksberg Flogsta Stenhagen" || !getBus[i].stop_headsign === "Ultuna")) {
+                if (!allTripsToday.includes(getBus[i].service_id)) {
                     continue;
                 }
                 
@@ -124,23 +130,23 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 }
             }
 
-            // Sort unique times and keep 'numberOfUpcomingbuses' of the closest times
+            // Sort unique times and keep 'numberOfUpcomingBuses' of the closest times
             const sortedTimes = Array.from(addedTimes).filter(time => moment(currentTime).set('hour', time.split(":")[0]).set('minute', time.split(":")[1]).set('second', time.split(":")[2]).isAfter(currentTime)).sort();
-            const closestTimes = sortedTimes.slice(0, numberOfUpcomingbuses);
+            const closestTimes = sortedTimes.slice(0, numberOfUpcomingBuses);
 
-            // Add the closest times to upcomingbuses
-            const upcomingbuses = [];
+            // Add the closest times to upcomingBuses
+            const upcomingBuses = [];
             closestTimes.forEach(timeKey => {
-                upcomingbuses.push({ arrivalTime: timeKey });
+                upcomingBuses.push({ arrivalTime: timeKey });
             });
-            return upcomingbuses;
+            return upcomingBuses;
         }
 
         const busStopsAndHeadsigns = await getAllBusStopsAndHeadsigns();
         const busTimesPromises = busStopsAndHeadsigns.map(async (stop) => {
             const { stopId, headsign } = stop;
             const response = await getStoptimesWithHeadsign(stopId, headsign);
-            return { ...stop, upcomingbuses: response};
+            return { ...stop, upcomingBuses: response};
         });
 
         const busTimes = await Promise.all(busTimesPromises);
