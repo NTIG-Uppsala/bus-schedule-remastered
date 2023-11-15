@@ -68,6 +68,20 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
         });
         const sheetInput = getRows.data["values"];
 
+        let currentTime;
+
+        if (req.params.date === undefined) {
+            currentTime = moment();
+        } else {
+            currentTime = moment(req.params.date);
+        }
+
+        const getDates = gtfs.getTripsDatedVehicleJourneys({
+            operating_day_date: currentTime.format('YYYYMMDD'),
+        },['trip_id']);
+        const allTripsToday = getDates.map(function(item){
+            return item.trip_id;
+        });
         // Create a function to get all bus stops and headsigns
         async function getAllBusStopsAndHeadsigns() {
             const result = [];
@@ -106,6 +120,11 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
 
             for (let i = 0; i < getBus.length; i++) {
                 const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]);
+                // skips buses that are not running today 
+                if (!allTripsToday.includes(getBus[i].trip_id) && (!getBus[i].stop_headsign === "Eriksberg Flogsta Stenhagen" || !getBus[i].stop_headsign === "Ultuna")) {
+                    continue;
+                }
+                
                 const timeKey = arrivalTime.format('HH:mm:ss');
                 // checks if time has already beeb added
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey)) {
