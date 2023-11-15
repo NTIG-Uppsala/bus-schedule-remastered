@@ -8,7 +8,7 @@ import { google } from "googleapis";
 const app = express();
 const PORT = 8080;
 const maxImportTries = 3;
-const numberOfUpcomingBusses = 3
+const numberOfUpcomingbuses = 2;
 let importSuccess = false;
 dotenv.config();
 
