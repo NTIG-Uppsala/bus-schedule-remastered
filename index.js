@@ -116,13 +116,17 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             // Sort unique times and keep 'numberOfUpcomingBusses' of the closest times
             const sortedTimes = Array.from(addedTimes).filter(time => moment(currentTime).set('hour', time.split(":")[0]).set('minute', time.split(":")[1]).isAfter(currentTime)).sort();
             const closestTimes = sortedTimes.slice(0, numberOfUpcomingBusses);
+            // Sort unique times and keep 'numberOfUpcomingbuses' of the closest times
+            const closestTimes = sortedTimes.slice(0, numberOfUpcomingbuses);
 
             // Add the closest times to upcomingBusses
             closestTimes.forEach(timeKey => {
                 upcomingBusses.push({ arrivalTime: timeKey });
+                upcomingbuses.push({ arrivalTime: timeKey });
             });
 
             return upcomingBusses;
+            return upcomingbuses;
         }
 
         const busStopsAndHeadsigns = await getAllBusStopsAndHeadsigns();
@@ -130,6 +134,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             const { stopId, headsign } = stop;
             const response = await getStoptimesWithHeadsign(stopId, headsign);
             return { ...stop, upcomingBusses: response};
+            return { ...stop, upcomingbuses: response};
         });
 
         const busTimes = await Promise.all(busTimesPromises);
