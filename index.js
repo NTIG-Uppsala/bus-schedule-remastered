@@ -115,6 +115,11 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             return result;
         }
 
+        function isScheduleCanceled(tripId) {
+            const realTimeData = JSON.parse(fs.readFileSync('.realTimeData.json'));
+            const tripUpdate = realTimeData.entity.find(entity => entity.tripUpdate.trip.tripId === tripId);
+            return tripUpdate && tripUpdate.tripUpdate.trip.scheduleRelationship === "CANCELED";
+        }
 
         // Create a function to get bus times for a specific stop and headsign
         async function getStoptimesWithHeadsign(stopId, headsign) {
@@ -138,22 +143,47 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]).set('second', getBus[i].arrival_time.split(":")[2]);
                 const timeKey = arrivalTime.format('HH:mm:ss');
                 // checks if time has already beeb added
-                if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey)) {
+                if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey) && !isScheduleCanceled(getBus[i].trip_id)) {
                     addedTimes.add(timeKey);
+
+
+                    // Find the corresponding real-time data for the current trip
+                    const tripId = getBus[i].trip_id;
+                    const realTimeData = JSON.parse(fs.readFileSync('.realTimeData.json'));
+                    const tripUpdate = realTimeData.entity.find(entity => entity.tripUpdate.trip.tripId === tripId);
+
+                    if (tripUpdate) {
+                        // Get the departure delay for the specified stopId
+                        const stopUpdate = tripUpdate.tripUpdate.stopTimeUpdate.find(stopUpdate => stopUpdate.stopId === stopId);
+        
+                        if (stopUpdate) {
+                            const departureDelay = stopUpdate.departure.delay;
+                            // Adjust the arrival time based on the departure delay
+                            arrivalTime.add(departureDelay, 'seconds');
+                            getBus[i].departureTime = arrivalTime.format('HH:mm:ss');
+                            console.log("tripid = " + tripId)
+                            console.log("stopId = " + stopId)
+                        }
+                    }    
                 }
             }
-
+              
             // Sort unique times and keep 'numberOfUpcomingBuses' of the closest times
             const sortedTimes = Array.from(addedTimes).filter(time => moment(currentTime).set('hour', time.split(":")[0]).set('minute', time.split(":")[1]).set('second', time.split(":")[2]).isAfter(currentTime)).sort();
             const closestTimes = sortedTimes.slice(0, numberOfUpcomingBuses);
 
-            // Add the closest times to upcomingBuses
-            const upcomingBuses = [];
-            closestTimes.forEach(timeKey => {
-                upcomingBuses.push({ arrivalTime: timeKey });
+            const upcomingBuses = closestTimes.map(timeKey => {
+                const busInfo = { departureTime: timeKey };
+                const departureTime = getBus.find(bus => moment(currentTime).set('hour', bus.arrival_time.split(":")[0]).set('minute', bus.arrival_time.split(":")[1]).set('second', bus.arrival_time.split(":")[2]).format('HH:mm:ss') === timeKey)?.departureTime;
+                if (departureTime !== undefined) {
+                    busInfo.departureTime = departureTime;
+                }
+                return busInfo;
             });
+
             return upcomingBuses;
         }
+
 
         const busStopsAndHeadsigns = await getAllBusStopsAndHeadsigns();
         const busTimesPromises = busStopsAndHeadsigns.map(async (stop) => {
