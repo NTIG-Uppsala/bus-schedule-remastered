@@ -4,6 +4,7 @@ import * as gtfs from 'gtfs';
 import * as dotenv from 'dotenv';
 import moment from 'moment';
 import { google } from "googleapis";
+import GtfsRealtime from './node_modules/gtfs-realtime/lib/gtfs-realtime.js';
 
 
 const app = express();
@@ -47,8 +48,21 @@ async function importData() {
 
 importData();
 
+async function updateRealTimeData() {
+    const config = {
+        url: 'https://opendata.samtrafiken.se/gtfs-rt/ul/TripUpdates.pb?key=' + process.env.REALTIME_API_KEY,
+        output: './realTimeData.json',
+        
+    };
+    
+    GtfsRealtime(config);
+}
+
+updateRealTimeData();
+
 app.get('/NTIBusScreen/:date?', async (req, res) => {
     try {
+        await updateRealTimeData();
         // Accesses the Google Sheet for admins to add stops and headsigns
         const auth = new google.auth.GoogleAuth({
             keyFile: 'credentials.json',
@@ -82,7 +96,6 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             return item.service_id;
         });
         const trips = gtfs.getTrips({}, ['service_id', 'trip_id']);
-        console.log(trips)
         // Create a function to get all bus stops and headsigns
         async function getAllBusStopsAndHeadsigns() {
             const result = [];
