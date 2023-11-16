@@ -115,6 +115,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             return result;
         }
 
+        // Function to check if the schedule is canceled for a given tripId
         function isScheduleCanceled(tripId) {
             const realTimeData = JSON.parse(fs.readFileSync('.realTimeData.json'));
             const tripUpdate = realTimeData.entity.find(entity => entity.tripUpdate.trip.tripId === tripId);
