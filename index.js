@@ -19,12 +19,18 @@ const release = process.env.NODE_ENV === 'production';
 
 // Config for GTFS import
 let gtfsConfig;
-if (release == true) {
+if (release === true) {
     gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
     gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
 } else {
     gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
 
+}
+let realTimeDataFile;
+if (release === true) {
+    realTimeDataFile = ".realTimeData.json"
+} else {
+    realTimeDataFile = "./data/.realTimeData.json"
 }
 
 // This function attempts to import GTFS data and retries up to 'maxImportTries' times.
@@ -117,7 +123,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
 
         // Function to check if the schedule is canceled for a given tripId
         function isScheduleCanceled(tripId) {
-            const realTimeData = JSON.parse(fs.readFileSync('.realTimeData.json'));
+            const realTimeData = JSON.parse(fs.readFileSync(realTimeDataFile));
             const tripUpdate = realTimeData.entity.find(entity => entity.tripUpdate.trip.tripId === tripId);
             return tripUpdate && tripUpdate.tripUpdate.trip.scheduleRelationship === "CANCELED";
         }
@@ -150,7 +156,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
 
                     // Find the corresponding real-time data for the current trip
                     const tripId = getBus[i].trip_id;
-                    const realTimeData = JSON.parse(fs.readFileSync('.realTimeData.json'));
+                    const realTimeData = JSON.parse(fs.readFileSync(realTimeDataFile));
                     const tripUpdate = realTimeData.entity.find(entity => entity.tripUpdate.trip.tripId === tripId);
 
                     if (tripUpdate) {
