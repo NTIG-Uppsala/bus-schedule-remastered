@@ -31,4 +31,9 @@ describe('Tests', () => {
         cy.visit('127.0.0.1:8080/NTIBusScreen/2023-11-17T11:28:00');
         cy.contains('Nyby","upcomingBuses":[{"departureTime":"11:33:34"},{"departureTime":"11:54:27"}]}')
     });
+
+    it('testCancelledBus', () => {
+        cy.visit('127.0.0.1:8080/NTIBusScreen/2023-11-17T11:28:00');
+        cy.contains('Sunnersta","upcomingBuses":[{"departureTime":"11:42:00"},{"departureTime":"12:11:00"}]}')
+    });
 });

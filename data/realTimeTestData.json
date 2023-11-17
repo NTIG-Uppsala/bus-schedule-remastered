@@ -36414,7 +36414,7 @@
         "trip": {
           "tripId": "33010000187517149",
           "startDate": "20231117",
-          "scheduleRelationship": "SCHEDULED"
+          "scheduleRelationship": "CANCELED"
         },
         "stopTimeUpdate": [
           {
