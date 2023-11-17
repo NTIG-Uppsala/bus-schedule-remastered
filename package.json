@@ -33,6 +33,7 @@
     "gtfs": "^4.5.0",
     "gtfs-realtime": "^0.2.0",
     "moment": "^2.29.4",
+    "node-cron": "^3.0.3",
     "nodemon": "^3.0.1",
     "promisify": "^0.0.3",
     "sqlite3": "^5.1.6",

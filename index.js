@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import moment from 'moment';
 import { google } from "googleapis";
 import GtfsRealtime from './node_modules/gtfs-realtime/lib/gtfs-realtime.js';
+import cron from 'node-cron';
 
 
 
@@ -34,26 +35,33 @@ if (release === true) {
     realTimeDataFile = "./data/realTimeTestData.json"
 }
 
-// This function attempts to import GTFS data and retries up to 'maxImportTries' times.
-async function importData() {
-    for (let i = 0; i < maxImportTries; i++) {
-        try {
-            if (!fs.existsSync(gtfsConfig.sqlitePath)) {
-                await gtfs.importGtfs(gtfsConfig);
-            }
-            await gtfs.openDb(gtfsConfig);
-            importSuccess = true;
-            console.log(`Data imported successfully in ${i + 1} tries`);
-        } catch (err) {
-            console.error(err);
+// Usage
+let gtfsConfig = getStaticData();
+const realTimeDataFile = getRealTimeDataFile();
+
+async function importGtfsData() {
+    try {
+        if (!fs.existsSync(gtfsConfig.sqlitePath) && !release) {
+            await gtfs.importGtfs(gtfsConfig);
+        } else if (release){
+            await gtfs.importGtfs(gtfsConfig);
         }
-        if (importSuccess) {
-            break;
-        }
+        await gtfs.openDb(gtfsConfig);
+        console.log('Data imported successfully');
+    } catch (err) {
+        console.error(err);
     }
 }
 
-importData();
+// Usage
+await importGtfsData();
+
+// Schedule a cron job to run the getStaticData function every day at 07:00
+cron.schedule('0 7 * * *', async () => {
+    gtfsConfig = getStaticData();
+    await importGtfsData();
+});
+
 
 async function updateRealTimeData() {
     const config = {
