@@ -30,8 +30,8 @@ if (release === true) {
 let realTimeDataFile;
 if (release === true) {
     realTimeDataFile = ".realTimeData.json"
-} else {
-    realTimeDataFile = "./data/.realTimeData.json"
+} else {    
+    realTimeDataFile = "./data/realTimeTestData.json"
 }
 
 // This function attempts to import GTFS data and retries up to 'maxImportTries' times.
