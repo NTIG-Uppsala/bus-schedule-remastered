@@ -11,28 +11,24 @@ import cron from 'node-cron';
 
 const app = express();
 const PORT = 8080;
-const maxImportTries = 3;
 const numberOfUpcomingBuses = 2;
-let importSuccess = false;
 dotenv.config();
 
 // Checking in .env file if NODE_ENV === 'production'
 const release = process.env.NODE_ENV === 'production';
 
-// Config for GTFS import
-let gtfsConfig;
-if (release === true) {
-    gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_rel_config.json'));
-    gtfsConfig.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
-} else {
-    gtfsConfig = JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
-
+// Function to get GTFS configuration
+function getStaticData() {
+    const config = release ? JSON.parse(fs.readFileSync('./gtfs_rel_config.json')) : JSON.parse(fs.readFileSync('./gtfs_test_config.json'));
+    if (release) {
+        config.agencies[0].url += '?key=' + process.env.STATIC_API_KEY;
+    }
+    return config;
 }
-let realTimeDataFile;
-if (release === true) {
-    realTimeDataFile = ".realTimeData.json"
-} else {    
-    realTimeDataFile = "./data/realTimeTestData.json"
+
+// Function to get real-time data file path
+function getRealTimeDataFile() {
+    return release ? ".realTimeData.json" : "./data/realTimeTestData.json";
 }
 
 // Usage
