@@ -7,6 +7,7 @@ import { google } from "googleapis";
 import GtfsRealtime from './node_modules/gtfs-realtime/lib/gtfs-realtime.js';
 
 
+
 const app = express();
 const PORT = 8080;
 const maxImportTries = 3;
@@ -149,9 +150,8 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 
                 const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]).set('second', getBus[i].arrival_time.split(":")[2]);
                 const timeKey = arrivalTime.format('HH:mm:ss');
-                // checks if time has already beeb added
+                // checks if time has already been added
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey) && !isScheduleCanceled(getBus[i].trip_id)) {
-                    addedTimes.add(timeKey);
 
 
                     // Find the corresponding real-time data for the current trip
@@ -166,12 +166,15 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                         if (stopUpdate) {
                             const departureDelay = stopUpdate.departure.delay;
                             // Adjust the arrival time based on the departure delay
+                            const staticdata = arrivalTime.format('HH:mm:ss');
                             arrivalTime.add(departureDelay, 'seconds');
                             getBus[i].departureTime = arrivalTime.format('HH:mm:ss');
-                            console.log("tripid = " + tripId)
-                            console.log("stopId = " + stopId)
+                            addedTimes.add(getBus[i].departureTime)
                         }
-                    }    
+                    }  else {
+                        addedTimes.add(timeKey);
+
+                    }  
                 }
             }
               
@@ -187,7 +190,6 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 }
                 return busInfo;
             });
-
             return upcomingBuses;
         }
 
