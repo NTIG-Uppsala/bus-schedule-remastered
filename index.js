@@ -100,19 +100,19 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             currentTime = moment(req.params.date);
         }
 
-        const getDates = gtfs.getCalendarDates({
+        //Gets the service_id for of the buses running today
+        const getBusScheduleDates = gtfs.getCalendarDates({
             date: currentTime.format('YYYYMMDD'),
         },['service_id']);
-        const allTripsToday = getDates.map(function(item){
+        const allTripsToday = getBusScheduleDates.map(function(item){
             return item.service_id;
         });
-        const trips = gtfs.getTrips({}, ['service_id', 'trip_id']);
         // Create a function to get all bus stops and headsigns
         async function getAllBusStopsAndHeadsigns() {
             const result = [];
             for (let i = 0; i < sheetInput.length; i++) {
                 const sheetStopName = sheetInput[i][0];
-                let direction = sheetInput[i][1];
+                const direction = sheetInput[i][1];
                 const headsign = sheetInput[i][2];
                 const getAllstops = gtfs.getStops();
 
@@ -140,7 +140,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 stop_headsign: headsign
             });
             const addedTimes = new Set(); // Set to keep unique times and be able to print them in order
-
+            const trips = gtfs.getTrips({}, ['service_id', 'trip_id']);
             for (let i = 0; i < getBus.length; i++) {
                 for (let y = 0; y < trips.length; y++) {
                     if (trips[y].trip_id === getBus[i].trip_id) {
@@ -151,13 +151,12 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 if (!allTripsToday.includes(getBus[i].service_id)) {
                     continue;
                 }
-                
                 const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]).set('second', getBus[i].arrival_time.split(":")[2]);
                 const timeKey = arrivalTime.format('HH:mm:ss');
-                // checks if time has already been added
+                // checks if time has already been added or canceled
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey) && !isScheduleCanceled(getBus[i].trip_id)) {
 
-
+ 
                     // Find the corresponding real-time data for the current trip
                     const tripId = getBus[i].trip_id;
                     const realTimeData = JSON.parse(fs.readFileSync(realTimeDataFile));
@@ -170,7 +169,6 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                         if (stopUpdate) {
                             const departureDelay = stopUpdate.departure.delay;
                             // Adjust the arrival time based on the departure delay
-                            const staticdata = arrivalTime.format('HH:mm:ss');
                             arrivalTime.add(departureDelay, 'seconds');
                             getBus[i].departureTime = arrivalTime.format('HH:mm:ss');
                             addedTimes.add(getBus[i].departureTime)
@@ -196,6 +194,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             });
             return upcomingBuses;
         }
+        
 
 
         const busStopsAndHeadsigns = await getAllBusStopsAndHeadsigns();
