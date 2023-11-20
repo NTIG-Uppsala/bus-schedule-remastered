@@ -88,7 +88,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             auth,
             spreadsheetId,
             // Fetching the data from the following range, and only uses the cells with values in them.
-            range: "sheet1!B2:D100",
+            range: "sheet1!A2:D100",
         });
         const sheetInput = getRows.data["values"];
 
@@ -111,16 +111,17 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
         async function getAllBusStopsAndHeadsigns() {
             const result = [];
             for (let i = 0; i < sheetInput.length; i++) {
-                const sheetStopName = sheetInput[i][0];
-                const direction = sheetInput[i][1];
-                const headsign = sheetInput[i][2];
+                const busNumber = sheetInput[i][0];
+                const sheetStopName = sheetInput[i][1];
+                const direction = sheetInput[i][2];
+                const headsign = sheetInput[i][3];
                 const getAllstops = gtfs.getStops();
 
                 // Search for the stop name and direction in GTFS
                 const foundStop = getAllstops.find(item => item.stop_name === sheetStopName && item.platform_code === direction);
                 // If the stop is found, add the stop_id to the result array
                 if (foundStop) {
-                    result.push({ stopId: foundStop.stop_id, stopName: sheetStopName, headsign});
+                    result.push({ stopId: foundStop.stop_id, stopName: sheetStopName, headsign, busNumber});
                 }
             }
             return result;
@@ -206,7 +207,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
 
         const busStopsAndHeadsigns = await getAllBusStopsAndHeadsigns();
         const busTimesPromises = busStopsAndHeadsigns.map(async (stop) => {
-            const { stopId, headsign } = stop;
+            const { stopId, headsign} = stop;
             const response = await getStoptimesWithHeadsign(stopId, headsign);
             return { ...stop, upcomingBuses: response};
         });
