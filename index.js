@@ -139,6 +139,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 stop_id: stopId,
                 stop_headsign: headsign
             });
+            let changedBuses = [];
             const addedTimes = new Set(); // Set to keep unique times and be able to print them in order
             const trips = gtfs.getTrips({}, ['service_id', 'trip_id']);
             for (let i = 0; i < getBus.length; i++) {
@@ -172,6 +173,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                             arrivalTime.add(departureDelay, 'seconds');
                             getBus[i].departureTime = arrivalTime.format('HH:mm:ss');
                             addedTimes.add(getBus[i].departureTime)
+                            changedBuses.push(getBus[i].trip_id);
                         }
                     }  else {
                         addedTimes.add(timeKey);
@@ -179,16 +181,21 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                     }  
                 }
             }
-              
             // Sort unique times and keep 'numberOfUpcomingBuses' of the closest times
             const sortedTimes = Array.from(addedTimes).filter(time => moment(currentTime).set('hour', time.split(":")[0]).set('minute', time.split(":")[1]).set('second', time.split(":")[2]).isAfter(currentTime)).sort();
             const closestTimes = sortedTimes.slice(0, numberOfUpcomingBuses);
 
             const upcomingBuses = closestTimes.map(timeKey => {
-                const busInfo = { departureTime: timeKey };
-                const departureTime = getBus.find(bus => moment(currentTime).set('hour', bus.arrival_time.split(":")[0]).set('minute', bus.arrival_time.split(":")[1]).set('second', bus.arrival_time.split(":")[2]).format('HH:mm:ss') === timeKey)?.departureTime;
-                if (departureTime !== undefined) {
-                    busInfo.departureTime = departureTime;
+                const busInfo = { departureTime: timeKey};
+                if (changedBuses > 0) {
+                    const businformation = getBus.find(bus => moment(currentTime).set('hour', bus.arrival_time.split(":")[0]).set('minute', bus.arrival_time.split(":")[1]).set('second', bus.arrival_time.split(":")[2]).format('HH:mm:ss') === timeKey && changedBuses.includes(bus.trip_id));
+                    if (businformation !== undefined) {
+                        if (businformation.departureTime !== undefined) {
+                            busInfo.departureTime = businformation.departureTime;
+                        }
+                    } else {
+                        return busInfo
+                    }
                 }
                 return busInfo;
             });
