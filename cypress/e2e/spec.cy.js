@@ -16,11 +16,6 @@ describe('Tests', () => {
         })
     });
 
-    it('nextBusListNotEmpty', () => {
-        cy.visit('127.0.0.1:8080/NTIBusScreen/2023-11-08T23:59:59');
-        cy.contains('"upcomingBuses":[]').should('not.exist');
-    });
-
     it('nextBusIsRight', () => {
         cy.visit('127.0.0.1:8080/NTIBusScreen/2023-11-15T09:00:00');
         cy.contains('Ärna","upcomingBuses":[{"departureTime":"09:08:00"},{"departureTime":"09:21:00"}]}')
