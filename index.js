@@ -6,6 +6,7 @@ import moment from 'moment';
 import { google } from "googleapis";
 import GtfsRealtime from './node_modules/gtfs-realtime/lib/gtfs-realtime.js';
 import cron from 'node-cron';
+import ejs from 'ejs';
 
 
 
@@ -70,6 +71,9 @@ async function updateRealTimeData() {
 }
 
 updateRealTimeData();
+
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
 
 app.get('/NTIBusScreen/:date?', async (req, res) => {
     try {
@@ -215,9 +219,9 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
         const busTimes = await Promise.all(busTimesPromises);
         let busTimeList = []
         for (let bus = 0;bus <= busTimes.length-1; bus++) {
-            busTimeList.push(JSON.stringify(busTimes[bus]) + "<br>" + "<br>")
+            busTimeList.push(busTimes[bus])
         };
-        res.send("<html>"+ busTimeList + "</html>");
+        res.render('index', { busTimeList });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error retrieving bus times');
