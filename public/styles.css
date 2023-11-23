@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('./background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 20px;
+    height: 90vh;
+}
+
+#bigClock {
+    font-size: 10rem;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 10vh;
+}
+
+#theList {
+    margin-top: 15vh;
+}
+
+.mat-card {
+    margin-bottom: 3vh;
+    padding: 10px;
+    background-color: #fff; /* Adjust as needed */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    border-radius: 4px;
+    opacity: 0.5;
+}
+
+.upper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bus-info {
+    display: flex;
+    align-items: center;
+}
+
+.bus-line {
+    font-size: 2.5rem;
+    width: 82px;
+    border-radius: 4px;
+    text-align: center;
+    background-color: green;
+    color: whitesmoke;
+}
+
+.departure-info {
+    margin-left: 10px;
+    font-size: 1rem;
+    line-height: 20px;
+    color: #000000;
+}
+
+
+
+.time-until-departure {
+    text-align: right;
+}
+
+.lower {
+    display: flex;
+    justify-content: space-between;
+}

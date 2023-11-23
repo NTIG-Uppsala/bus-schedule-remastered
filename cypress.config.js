@@ -5,7 +5,6 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    baseUrl: 'http://localhost:8080/NtiBusScreen/'
   },
   projectId: 'q783gb'
 });

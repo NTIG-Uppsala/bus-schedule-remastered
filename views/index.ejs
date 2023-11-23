@@ -1,0 +1,60 @@
+<!-- index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Time List</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <meta http-equiv="refresh" content="60">
+</head>
+<body>
+    <div id="bigClock"></div>
+    <div id="theList">
+    <% try { %>
+        <% busTimeList.forEach(bus => { %>
+            <div class="mat-card upper">
+                <div class="bus-info">
+                    <!-- Bus line number -->
+                    <div class="bus-line">
+                        <%= bus.busNumber %>
+                    </div>
+                    <!-- Departuring  -->
+                    <div class="departure-info">
+                        <div style="font-weight: bold;"><%= bus.stopName %></div>
+                        <div>
+                            <%= bus.headsign %>
+                        </div>
+                    </div>
+                </div>
+                <!-- Time until departure -->
+                <div class="time-until-departure">
+                    <span>
+                        <% if (typeof bus.upcomingBuses[0].departureTime === 'string') {
+                            const [hours, minutes, seconds] = bus.upcomingBuses[0].departureTime.split(':').map(Number);
+                            bus.upcomingBuses[0].departureTime = new Date(currentTime.toDate());
+                            bus.upcomingBuses[0].departureTime.setHours(hours, minutes, seconds);
+
+                        } %>
+                        
+                        
+                        <% var departureTime = new Date(bus.upcomingBuses[0].departureTime); %>
+                        <% const timeUntilDeparture = Math.floor((departureTime - currentTime.toDate()) / (60 * 1000)); %>
+                        <% if (timeUntilDeparture > 1) { %>
+                            <%= timeUntilDeparture %> min
+                        <% } else { %>
+                            nu
+                        <% } %>
+                    </span>
+                    <div>Nästa <%= bus.upcomingBuses[1].departureTime.substring(0, bus.upcomingBuses[1].departureTime.length-3); %></div>
+                </div>
+            </div>
+        <% }); %>
+    <% } catch (error) { %>
+        <div>Loading</div>
+    <% } %>
+    </div>
+</body>
+</html>
+
+

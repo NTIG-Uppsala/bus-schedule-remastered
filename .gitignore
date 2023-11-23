@@ -111,3 +111,11 @@ credentials.json
 
 # Test Screenshots
 cypress/Screenshots
+
+# test data
+cypress\fixtures\busData.json
+data\busdata.xlsx
+
+# realTimeData.json
+.realTimeData.json
+

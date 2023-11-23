@@ -10,5 +10,5 @@
       ]
     }
   ],
-  "sqlitePath": "./data/gtfs.sqlite"
+  "sqlitePath": "./data/gtfsTestData.sqlite"
 }
