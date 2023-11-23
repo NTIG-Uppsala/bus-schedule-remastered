@@ -61,13 +61,14 @@ cron.schedule('0 7 * * *', async () => {
 
 
 async function updateRealTimeData() {
-    const config = {
-        url: 'https://opendata.samtrafiken.se/gtfs-rt/ul/TripUpdates.pb?key=' + process.env.REALTIME_API_KEY,
-        output: './realTimeData.json',
+    if (release) {
+        const config = {
+            url: 'https://opendata.samtrafiken.se/gtfs-rt/ul/TripUpdates.pb?key=' + process.env.REALTIME_API_KEY,
+            output: './realTimeData.json',
+        };
         
-    };
-    
-    GtfsRealtime(config);
+        GtfsRealtime(config);
+    }
 }
 
 updateRealTimeData();
