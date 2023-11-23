@@ -221,7 +221,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
         for (let bus = 0;bus <= busTimes.length-1; bus++) {
             busTimeList.push(busTimes[bus])
         };
-        res.render('index', { busTimeList });
+        res.render('index', { busTimeList, currentTime });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error retrieving bus times');
