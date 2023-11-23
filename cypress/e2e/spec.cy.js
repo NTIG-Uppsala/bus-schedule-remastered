@@ -18,17 +18,20 @@ describe('Tests', () => {
 
     it('nextBusIsRight', () => {
         cy.visit('127.0.0.1:8080/NTIBusScreen/2023-11-15T09:00:00');
-        cy.contains('Ärna","upcomingBuses":[{"departureTime":"09:08:00"},{"departureTime":"09:21:00"}]}')
-        cy.contains('Fyrislund","upcomingBuses":[{"departureTime":"09:00:02"},{"departureTime":"09:10:02"}]}')
+        cy.contains('8 min')
+        cy.contains('Nästa 09:21')
+        cy.contains('nu')
+        cy.contains('Nästa 09:10')
     });
 
     it('testRealTimeData', () => {
         cy.visit('127.0.0.1:8080/NTIBusScreen/2023-11-17T11:28:00');
-        cy.contains('Nyby","upcomingBuses":[{"departureTime":"11:33:34"},{"departureTime":"11:54:27"}]}')
+        cy.contains('Nästa 11:54')
     });
 
     it('testCancelledBus', () => {
         cy.visit('127.0.0.1:8080/NTIBusScreen/2023-11-17T11:28:00');
-        cy.contains('Sunnersta","upcomingBuses":[{"departureTime":"11:42:00"},{"departureTime":"12:11:00"}]}')
+        cy.contains('14 min')
+        cy.contains('Nästa 12:11')
     });
 });
