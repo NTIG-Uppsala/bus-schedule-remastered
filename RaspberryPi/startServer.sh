@@ -1,2 +1,2 @@
 cd /home/monster/git/bus-schedule-remastered/
-npm start
+node index.js
