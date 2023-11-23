@@ -12,13 +12,13 @@ You also might want an cypress account linked to the project track the testing.
 
 
 # RaspberryPi Setup
-1. Download the rasperry pi imager and insert your SD card into you computer.  [Imager Download](https://www.raspberrypi.com/software/)
-2. Choose the version of pi you have, the legacy operating system (OS) and then configure your storage.
+1. Download the Raspberry Pi imager and insert your SD card into you computer.  [Imager Download](https://www.raspberrypi.com/software/)
+2. Choose the version of Pi you have, choose an operating system and then configure your storage.
 3. Configure the settings to your liking with passwords and internet connection and make sure to enable SSH.
-4. Once the configuration is done according to the imager porgramme, put your SD card in the rasperry pi and connect the pi to your devices. (Screen, keyboard, etc.)
+4. Once the configuration is done according to the imager programme, put your SD card in the Raspberry Pi and connect the Pi to your devices. (Screen, keyboard, etc.)
 5. Open the terminal and enter 'ifconfig'.
-6. Check your IP and make sure you remember it.
-7. When you are on the same internet connection as the pi. To connect to the pi, open the terminal on your computer and enter 'SSH yourhostname@yourIPAdress'. It will then ask for a password, enter it. The standard hostname for your pi will be "pi". Exapmle prompt: 'SSH pi@192.168.x.x'.
+6. Check the IP of your Pi and make sure you remember it.
+7. When you are on the same internet connection as the Pi. To connect to the Pi, open the terminal on your computer and enter 'SSH yourhostname@yourIPAdress'. It will then ask for a password, enter it. The standard hostname for your Pi will be "Pi" Unless you chose something else. Example prompt: 'SSH pi@192.168.x.x'.
 8. Enter 'mkdir git' to make a new folder for the github repository.
 9. Enter 'cd git' to enter the repo.
 10. Enter 'git clone https://github.com/NTIG-Uppsala/bus-schedule-remastered.git'.
