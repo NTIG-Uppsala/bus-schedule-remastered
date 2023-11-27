@@ -12,92 +12,74 @@
 
 <body>
     <div id="theList">
-<<<<<<< Updated upstream
-    <% try { %>
-        <% busTimeList.forEach(bus => { %>
-=======
-        <% busTimeList.forEach(bus=> { %>
->>>>>>> Stashed changes
-            <div class="mat-card upper">
-                <div class="bus-info">
-                    <!-- Bus line number -->
-                    <div class="bus-line">
-                        <%= bus.busNumber %>
-                    </div>
-                    <!-- Departuring  -->
-                    <div class="departure-info">
-<<<<<<< Updated upstream
-                        <div style="font-weight: bold;"><%= bus.stopName %></div>
-                        <div>
-                            <%= bus.headsign %>
+        <% try { %>
+            <% busTimeList.forEach(bus=> { %>
+                <div class="mat-card upper">
+                    <div class="bus-info">
+                        <!-- Bus line number -->
+                        <div class="bus-line">
+                            <%= bus.busNumber %>
                         </div>
-=======
-                        <div style="font-weight: bold;">
-                            <%= bus.stopName %>
-                        </div>
-                        <div>
-                            <span>Mot</span>
-                            <%= bus.headsign %>
+                        <!-- Departuring  -->
+                        <div class="departure-info">
+                            <div style="font-weight: bold;">
+                                <%= bus.stopName %>
+                            </div>
+                            <div>
+                                <span>Mot</span>
+                                <%= bus.headsign %>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Time until departure -->
-                <div class="time-until-departure">
-                    <span>
-                        <% if (typeof bus.upcomingBuses[0].departureTime==='string' ) { const [hours, minutes,
-                            seconds]=bus.upcomingBuses[0].departureTime.split(':').map(Number);
-                            bus.upcomingBuses[0].departureTime=new Date();
-                            bus.upcomingBuses[0].departureTime.setHours(hours, minutes, seconds); } %>
-                            <% var currentTime=new Date(); %>
+                    <!-- Time until departure -->
+                    <div class="time-until-departure">
+                        <span>
+                            <% if (typeof bus.upcomingBuses[0].departureTime==='string' ) { const [hours, minutes,
+                                seconds]=bus.upcomingBuses[0].departureTime.split(':').map(Number);
+                                bus.upcomingBuses[0].departureTime=new Date();
+                                bus.upcomingBuses[0].departureTime.setHours(hours, minutes, seconds); } %>
+                                <% var currentTime=new Date(); %>
+                                    <% var departureTime=new Date(bus.upcomingBuses[0].departureTime); %>
+                                        <% const timeUntilDeparture=Math.floor((departureTime - currentTime) / (60 *
+                                            1000)); %>
+                                            <% if (timeUntilDeparture> 1) { %>
+                                                <%= timeUntilDeparture %> min
+                                                    <% } else { %>
+                                                        nu
+                                                        <% } %>
+                        </span>
+                        <div>Nästa <%= bus.upcomingBuses[1].departureTime.substring(0,
+                                bus.upcomingBuses[1].departureTime.length-3); %>
+                        </div>
+                    </div>
+                    <!-- Time until departure -->
+                    <div class="time-until-departure">
+                        <span>
+                            <% if (typeof bus.upcomingBuses[0].departureTime==='string' ) { const [hours, minutes,
+                                seconds]=bus.upcomingBuses[0].departureTime.split(':').map(Number);
+                                bus.upcomingBuses[0].departureTime=new Date(currentTime.toDate());
+                                bus.upcomingBuses[0].departureTime.setHours(hours, minutes, seconds); } %>
+
+
                                 <% var departureTime=new Date(bus.upcomingBuses[0].departureTime); %>
-                                    <% const timeUntilDeparture=Math.floor((departureTime - currentTime) / (60 * 1000));
-                                        %>
+                                    <% const timeUntilDeparture=Math.floor((departureTime - currentTime.toDate()) / (60
+                                        * 1000)); %>
                                         <% if (timeUntilDeparture> 1) { %>
                                             <%= timeUntilDeparture %> min
                                                 <% } else { %>
                                                     nu
                                                     <% } %>
-                    </span>
-                    <div>Nästa <%= bus.upcomingBuses[1].departureTime.substring(0,
-                            bus.upcomingBuses[1].departureTime.length-3); %>
->>>>>>> Stashed changes
+                        </span>
+                        <div>Nästa <%= bus.upcomingBuses[1].departureTime.substring(0,
+                                bus.upcomingBuses[1].departureTime.length-3); %>
+                        </div>
                     </div>
                 </div>
-                <!-- Time until departure -->
-                <div class="time-until-departure">
-                    <span>
-                        <% if (typeof bus.upcomingBuses[0].departureTime === 'string') {
-                            const [hours, minutes, seconds] = bus.upcomingBuses[0].departureTime.split(':').map(Number);
-                            bus.upcomingBuses[0].departureTime = new Date(currentTime.toDate());
-                            bus.upcomingBuses[0].departureTime.setHours(hours, minutes, seconds);
-
-                        } %>
-                        
-                        
-                        <% var departureTime = new Date(bus.upcomingBuses[0].departureTime); %>
-                        <% const timeUntilDeparture = Math.floor((departureTime - currentTime.toDate()) / (60 * 1000)); %>
-                        <% if (timeUntilDeparture > 1) { %>
-                            <%= timeUntilDeparture %> min
-                        <% } else { %>
-                            nu
+                <% }); %>
+                    <% } catch (error) { %>
+                        <div>Loading</div>
                         <% } %>
-                    </span>
-                    <div>Nästa <%= bus.upcomingBuses[1].departureTime.substring(0, bus.upcomingBuses[1].departureTime.length-3); %></div>
-                </div>
-            </div>
-<<<<<<< Updated upstream
-        <% }); %>
-    <% } catch (error) { %>
-        <div>Loading</div>
-    <% } %>
-=======
-            <% }); %>
->>>>>>> Stashed changes
     </div>
 </body>
 
-<<<<<<< Updated upstream
-
-=======
 </html>
->>>>>>> Stashed changes
