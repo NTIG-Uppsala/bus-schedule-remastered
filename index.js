@@ -40,7 +40,7 @@ async function importGtfsData() {
     try {
         if (!fs.existsSync(gtfsConfig.sqlitePath) && !release) {
             await gtfs.importGtfs(gtfsConfig);
-        } else if (release){
+        } else if (release) {
             await gtfs.importGtfs(gtfsConfig);
         }
         await gtfs.openDb(gtfsConfig);
@@ -66,7 +66,7 @@ async function updateRealTimeData() {
             url: 'https://opendata.samtrafiken.se/gtfs-rt/ul/TripUpdates.pb?key=' + process.env.REALTIME_API_KEY,
             output: './realTimeData.json',
         };
-        
+
         GtfsRealtime(config);
     }
 }
@@ -108,8 +108,8 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
         //Gets the service_id for of the buses running today
         const getBusScheduleDates = gtfs.getCalendarDates({
             date: currentTime.format('YYYYMMDD'),
-        },['service_id']);
-        const allTripsToday = getBusScheduleDates.map(function(item){
+        }, ['service_id']);
+        const allTripsToday = getBusScheduleDates.map(function (item) {
             return item.service_id;
         });
         // Create a function to get all bus stops and headsigns
@@ -126,7 +126,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 const foundStop = getAllstops.find(item => item.stop_name === sheetStopName && item.platform_code === direction);
                 // If the stop is found, add the stop_id to the result array
                 if (foundStop) {
-                    result.push({ stopId: foundStop.stop_id, stopName: sheetStopName, headsign, busNumber});
+                    result.push({ stopId: foundStop.stop_id, stopName: sheetStopName, headsign, busNumber });
                 }
             }
             return result;
@@ -163,7 +163,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 // checks if time has already been added or canceled
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey) && !isScheduleCanceled(getBus[i].trip_id)) {
 
- 
+
                     // Find the corresponding real-time data for the current trip
                     const tripId = getBus[i].trip_id;
                     const realTimeData = JSON.parse(fs.readFileSync(realTimeDataFile));
@@ -172,7 +172,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                     if (tripUpdate) {
                         // Get the departure delay for the specified stopId
                         const stopUpdate = tripUpdate.tripUpdate.stopTimeUpdate.find(stopUpdate => stopUpdate.stopId === stopId);
-        
+
                         if (stopUpdate) {
                             const departureDelay = stopUpdate.departure.delay;
                             // Adjust the arrival time based on the departure delay
@@ -181,10 +181,10 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                             addedTimes.add(getBus[i].departureTime)
                             changedBuses.push(getBus[i].trip_id);
                         }
-                    }  else {
+                    } else {
                         addedTimes.add(timeKey);
 
-                    }  
+                    }
                 }
             }
             // Sort unique times and keep 'numberOfUpcomingBuses' of the closest times
@@ -192,7 +192,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             const closestTimes = sortedTimes.slice(0, numberOfUpcomingBuses);
 
             const upcomingBuses = closestTimes.map(timeKey => {
-                const busInfo = { departureTime: timeKey};
+                const busInfo = { departureTime: timeKey };
                 if (changedBuses > 0) {
                     const businformation = getBus.find(bus => moment(currentTime).set('hour', bus.arrival_time.split(":")[0]).set('minute', bus.arrival_time.split(":")[1]).set('second', bus.arrival_time.split(":")[2]).format('HH:mm:ss') === timeKey && changedBuses.includes(bus.trip_id));
                     if (businformation !== undefined) {
@@ -207,19 +207,19 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
             });
             return upcomingBuses;
         }
-        
+
 
 
         const busStopsAndHeadsigns = await getAllBusStopsAndHeadsigns();
         const busTimesPromises = busStopsAndHeadsigns.map(async (stop) => {
-            const { stopId, headsign} = stop;
+            const { stopId, headsign } = stop;
             const response = await getStoptimesWithHeadsign(stopId, headsign);
-            return { ...stop, upcomingBuses: response};
+            return { ...stop, upcomingBuses: response };
         });
 
         const busTimes = await Promise.all(busTimesPromises);
         let busTimeList = []
-        for (let bus = 0;bus <= busTimes.length-1; bus++) {
+        for (let bus = 0; bus <= busTimes.length - 1; bus++) {
             busTimeList.push(busTimes[bus])
         };
         res.render('index', { busTimeList, currentTime });

@@ -26,30 +26,8 @@
                                 <%= bus.stopName %>
                             </div>
                             <div>
-                                <span>Mot</span>
                                 <%= bus.headsign %>
                             </div>
-                        </div>
-                    </div>
-                    <!-- Time until departure -->
-                    <div class="time-until-departure">
-                        <span>
-                            <% if (typeof bus.upcomingBuses[0].departureTime==='string' ) { const [hours, minutes,
-                                seconds]=bus.upcomingBuses[0].departureTime.split(':').map(Number);
-                                bus.upcomingBuses[0].departureTime=new Date();
-                                bus.upcomingBuses[0].departureTime.setHours(hours, minutes, seconds); } %>
-                                <% var currentTime=new Date(); %>
-                                    <% var departureTime=new Date(bus.upcomingBuses[0].departureTime); %>
-                                        <% const timeUntilDeparture=Math.floor((departureTime - currentTime) / (60 *
-                                            1000)); %>
-                                            <% if (timeUntilDeparture> 1) { %>
-                                                <%= timeUntilDeparture %> min
-                                                    <% } else { %>
-                                                        nu
-                                                        <% } %>
-                        </span>
-                        <div>Nästa <%= bus.upcomingBuses[1].departureTime.substring(0,
-                                bus.upcomingBuses[1].departureTime.length-3); %>
                         </div>
                     </div>
                     <!-- Time until departure -->
