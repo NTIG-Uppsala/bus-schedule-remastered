@@ -1,2 +1,2 @@
-cd /home/monster/git/bus-schedule-remastered/
+cd /home/pi/git/bus-schedule-remastered/
 node index.js

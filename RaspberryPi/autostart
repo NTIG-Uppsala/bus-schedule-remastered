@@ -5,6 +5,6 @@
 @xset -dpms
 @xset s noblank
 @xset s off
-@lxterminal --working-directory=home/pi/git/bus-schedule-remastered npm start
+@sh /home/pi/git/bus-schedule-remastered/RaspberryPi/startServer.sh
 @chromium-browser --kiosk --new-window http://127.0.0.1:8080/ntibusscreen --incognito
 @unclutter -idle 3
