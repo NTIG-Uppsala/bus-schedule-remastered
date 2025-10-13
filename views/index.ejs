@@ -11,6 +11,9 @@
 </head>
 
 <body>
+    <div id="clock">
+        <%= currentTime.format('HH:mm') %>
+    </div>
     <div id="theList">
         <% try { %>
             <% busTimeList.forEach(bus=> { %>
@@ -33,8 +36,8 @@
                     <!-- Time until departure -->
                     <div class="time-until-departure">
                         <span>
-                            <% if (typeof bus.upcomingBuses[0].departureTime==='string' ) { const [hours, minutes,
-                                seconds]=bus.upcomingBuses[0].departureTime.split(':').map(Number);
+                            <% if (typeof bus.upcomingBuses[0].departureTime==='string' ) { const [hours,
+                                minutes,seconds]=bus.upcomingBuses[0].departureTime.split(':').map(Number);
                                 bus.upcomingBuses[0].departureTime=new Date(currentTime.toDate());
                                 bus.upcomingBuses[0].departureTime.setHours(hours, minutes, seconds); } %>
 

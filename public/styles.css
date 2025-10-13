@@ -9,8 +9,15 @@ body {
     height: 90vh;
 }
 
+#clock {
+    color: white;
+    margin: 10px auto;
+    font-size: 8rem;
+    width: fit-content;
+}
+
 #theList {
-    margin-top: 15vh;
+    margin-top: 10vh;
 }
 
 .mat-card {
@@ -49,8 +56,6 @@ body {
     line-height: 20px;
     color: #000000;
 }
-
-
 
 .time-until-departure {
     text-align: right;

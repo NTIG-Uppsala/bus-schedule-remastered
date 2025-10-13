@@ -1,8 +1,8 @@
 [
   {
     "Linje": 1,
-    "Hållplats": "Uppsala Lundellska skolan",
-    "Läge": "C",
+    "Hållplats": "Uppsala Lägerhyddsvägen",
+    "Läge": "A",
     "Bussnamn": "Boländerna Gränbystaden",
     "Dokumentation:": "länk",
     "Bussnamn att välja mellan": "Akademiska sjukhuset Ekonomikum",
@@ -11,8 +11,8 @@
   },
   {
     "Linje": 1,
-    "Hållplats": "Uppsala Lundellska skolan",
-    "Läge": "D",
+    "Hållplats": "Uppsala Lägerhyddsvägen",
+    "Läge": "B",
     "Bussnamn": "Rosendal Akademiska sjukhuset",
     "Bussnamn att välja mellan": "Boländerna",
     "Hållpatser": "Uppsala Polacksbacken",
@@ -31,7 +31,7 @@
     "Linje": 3,
     "Hållplats": "Uppsala Regementsvägen",
     "Läge": "B",
-    "Bussnamn": "Östra Gottsunda",
+    "Bussnamn": "Rosendal Östra Gottsunda",
     "Bussnamn att välja mellan": "Campus Ultuna",
     "Tillgängliga Lägen": "D"
   },
@@ -46,7 +46,7 @@
     "Linje": 4,
     "Hållplats": "Uppsala Polacksbacken",
     "Läge": "B",
-    "Bussnamn": "Ultuna Gottsunda",
+    "Bussnamn": "Ulleråker Ultuna Gottsunda",
     "Bussnamn att välja mellan": "Engelska skolan"
   },
   {

@@ -156,13 +156,12 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 }
                 // skips buses that are not running today 
                 if (!allTripsToday.includes(getBus[i].service_id)) {
-                    continue;
                 }
                 const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]).set('second', getBus[i].arrival_time.split(":")[2]);
                 const timeKey = arrivalTime.format('HH:mm:ss');
+
                 // checks if time has already been added or canceled
                 if (arrivalTime.isAfter(currentTime) && !addedTimes.has(timeKey) && !isScheduleCanceled(getBus[i].trip_id)) {
-
 
                     // Find the corresponding real-time data for the current trip
                     const tripId = getBus[i].trip_id;
@@ -193,7 +192,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
 
             const upcomingBuses = closestTimes.map(timeKey => {
                 const busInfo = { departureTime: timeKey };
-                if (changedBuses > 0) {
+                if (changedBuses.length > 0) {
                     const businformation = getBus.find(bus => moment(currentTime).set('hour', bus.arrival_time.split(":")[0]).set('minute', bus.arrival_time.split(":")[1]).set('second', bus.arrival_time.split(":")[2]).format('HH:mm:ss') === timeKey && changedBuses.includes(bus.trip_id));
                     if (businformation !== undefined) {
                         if (businformation.departureTime !== undefined) {
