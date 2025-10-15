@@ -86,7 +86,9 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
         });
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: "v4", auth: client });
-        const spreadsheetId = "1XW0cmrudu_FTS7BwioJpQsrJeMvYy6J3tYoabZkbcKY";
+
+        // If release is 'production', use the production sheet, else use the test sheet
+        const spreadsheetId = release ? "1XW0cmrudu_FTS7BwioJpQsrJeMvYy6J3tYoabZkbcKY" : "1TBEyUljMfWWzbIsBWdWdNnKGliM8IuUoTVw5jFM24A0";
 
         // Fetch data from the Google Sheet
         const getRows = await googleSheets.spreadsheets.values.get({

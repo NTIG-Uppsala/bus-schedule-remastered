@@ -114,6 +114,8 @@ cypress/Screenshots
 
 # test data
 cypress\fixtures\busData.json
+
+# production data
 data\busdata.xlsx
 
 # realTimeData.json
