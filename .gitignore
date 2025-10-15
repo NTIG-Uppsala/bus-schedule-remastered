@@ -113,10 +113,10 @@ credentials.json
 cypress/Screenshots
 
 # test data
-cypress\fixtures\busData.json
+busData.json
 
 # production data
-data\busdata.xlsx
+busdata.xlsx
 
 # realTimeData.json
 .realTimeData.json
