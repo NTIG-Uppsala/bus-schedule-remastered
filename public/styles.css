@@ -7,13 +7,31 @@ body {
     margin: 0;
     padding: 20px;
     height: 90vh;
+    box-sizing: border-box;
+}
+
+#header {
+    color: white;
+    margin: 10px auto;
+    width: fit-content;
+    display: flex;
+    height: 130px;
 }
 
 #clock {
-    color: white;
-    margin: 10px auto;
-    font-size: 8rem;
-    width: fit-content;
+    font-size: 5rem;
+    margin: 0 20px;
+}
+
+#current-time {
+    color: White;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.logo {
+    height: 110px;
+    margin: 0 20px;
 }
 
 #theList {

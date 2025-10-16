@@ -11,8 +11,18 @@
 </head>
 
 <body>
-    <div id="clock">
-        <%= currentTime.format('HH:mm') %>
+    <div id="header">
+        <div>
+            <img src="/nti_logo.svg" alt="NTI Logga" class="logo">
+        </div>
+        <div id="clock">
+            <div id="current-time">
+                <%= currentTime.format('HH:mm') %>
+            </div>
+        </div>
+        <div>
+            <img src="/te4_logo.svg" alt="TE4 Logga" class="logo">
+        </div>
     </div>
     <div id="theList">
         <% try { %>

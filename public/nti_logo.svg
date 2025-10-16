@@ -1,0 +1,21 @@
+<svg viewBox="0 0 121 106" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>NTI Gymnasiet - Logotyp (RGB)</title>
+  <defs></defs>
+  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="Start" transform="translate(-214.000000, -4150.000000)" fill="#FFFFFF">
+      <g id="NTI-Gymnasiet---Logotyp-(RGB)" transform="translate(214.000000, 4150.000000)">
+        <polyline id="Fill-1"
+          points="83.7009823 71 83.7009823 36.5520589 73 36.5520589 73 28 103 28 103 36.5520589 92.2984283 36.5520589 92.2984283 71 83.7009823 71">
+        </polyline>
+        <polyline id="Fill-2"
+          points="40.4273773 68.1337079 32 68.1337079 32 26 34.2392894 26 55.5136941 50.2414664 55.5136941 26.9234413 64 26.9234413 64 69 61.7607106 69 40.4273773 45.6814091 40.4273773 68.1337079">
+        </polyline>
+        <polygon id="Fill-3" points="112 71 121 71 121 28 112 28"></polygon>
+        <path
+          d="M45,8.49567214 L45,0 L0,0 L0,47.5706408 C0,80.0099848 16.1269726,90.3820053 42.4407258,104.6185 L45,106 L45,96.3784024 L44.6838073,96.206661 C20.8023938,83.2177662 8.34108409,75.1558141 8.34108409,47.5706408 L8.34108409,8.49508996 L45,8.49567214"
+          id="Fill-13"></path>
+      </g>
+    </g>
+  </g>
+</svg>
