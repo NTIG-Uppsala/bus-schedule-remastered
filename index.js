@@ -158,6 +158,7 @@ app.get('/NTIBusScreen/:date?', async (req, res) => {
                 }
                 // skips buses that are not running today 
                 if (!allTripsToday.includes(getBus[i].service_id)) {
+                    continue;
                 }
                 const arrivalTime = moment(currentTime).set('hour', getBus[i].arrival_time.split(":")[0]).set('minute', getBus[i].arrival_time.split(":")[1]).set('second', getBus[i].arrival_time.split(":")[2]);
                 const timeKey = arrivalTime.format('HH:mm:ss');
