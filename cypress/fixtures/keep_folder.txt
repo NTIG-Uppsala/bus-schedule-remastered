@@ -1,0 +1,1 @@
+This folder only exists so that the fixtures folder doesn't get gitignored since its content is gitignored

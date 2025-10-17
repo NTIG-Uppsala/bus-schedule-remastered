@@ -1,4 +1,0 @@
-agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_fare_url
-33010000000001407,UL,https://www.ul.se/,Europe/Stockholm,sv,https://www.ul.se/
-33010000000547186,Storstockholms Lokaltrafik AB,https://www.resrobot.se/,Europe/Stockholm,sv,
-33010000167212099,Mälardalstrafik,https://www.resrobot.se/,Europe/Stockholm,sv,
